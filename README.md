@@ -1,0 +1,2 @@
+# SmartCorrect
+AI corrector
