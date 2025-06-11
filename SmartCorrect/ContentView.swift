@@ -2,11 +2,12 @@
 //  ContentView.swift
 //  SmartCorrect
 //
-//  Created by מאיר רדנוביץ׳ on 09/06/2025.
+//  Created by מאיר רדנוביץ׳ on 08/06/2025.
 //
 
 import SwiftUI
 import SwiftData
+import Carbon
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext

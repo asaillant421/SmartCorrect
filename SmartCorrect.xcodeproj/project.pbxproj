@@ -6,41 +6,45 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		240476CF2DF6AAFE00A8A0CD /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 240476CE2DF6AAFE00A8A0CD /* KeyboardShortcuts */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
-		24EF96EB2DF7D5AB0086A8C1 /* PBXContainerItemProxy */ = {
+		240476B12DF6975600A8A0CD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 24EF96D22DF7D5A90086A8C1 /* Project object */;
+			containerPortal = 240476982DF6975300A8A0CD /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 24EF96D92DF7D5A90086A8C1;
+			remoteGlobalIDString = 2404769F2DF6975300A8A0CD;
 			remoteInfo = SmartCorrect;
 		};
-		24EF96F52DF7D5AB0086A8C1 /* PBXContainerItemProxy */ = {
+		240476BB2DF6975600A8A0CD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 24EF96D22DF7D5A90086A8C1 /* Project object */;
+			containerPortal = 240476982DF6975300A8A0CD /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 24EF96D92DF7D5A90086A8C1;
+			remoteGlobalIDString = 2404769F2DF6975300A8A0CD;
 			remoteInfo = SmartCorrect;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		24EF96DA2DF7D5A90086A8C1 /* SmartCorrect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartCorrect.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		24EF96EA2DF7D5AB0086A8C1 /* SmartCorrectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SmartCorrectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		24EF96F42DF7D5AB0086A8C1 /* SmartCorrectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SmartCorrectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		240476A02DF6975300A8A0CD /* SmartCorrect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartCorrect.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		240476B02DF6975600A8A0CD /* SmartCorrectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SmartCorrectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		240476BA2DF6975600A8A0CD /* SmartCorrectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SmartCorrectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		24EF96DC2DF7D5A90086A8C1 /* SmartCorrect */ = {
+		240476A22DF6975300A8A0CD /* SmartCorrect */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SmartCorrect;
 			sourceTree = "<group>";
 		};
-		24EF96ED2DF7D5AB0086A8C1 /* SmartCorrectTests */ = {
+		240476B32DF6975600A8A0CD /* SmartCorrectTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SmartCorrectTests;
 			sourceTree = "<group>";
 		};
-		24EF96F72DF7D5AB0086A8C1 /* SmartCorrectUITests */ = {
+		240476BD2DF6975600A8A0CD /* SmartCorrectUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = SmartCorrectUITests;
 			sourceTree = "<group>";
@@ -48,21 +52,22 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		24EF96D72DF7D5A90086A8C1 /* Frameworks */ = {
+		2404769D2DF6975300A8A0CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				240476CF2DF6AAFE00A8A0CD /* KeyboardShortcuts in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		240476AD2DF6975600A8A0CD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		24EF96E72DF7D5AB0086A8C1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		24EF96F12DF7D5AB0086A8C1 /* Frameworks */ = {
+		240476B72DF6975600A8A0CD /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -72,22 +77,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		24EF96D12DF7D5A90086A8C1 = {
+		240476972DF6975300A8A0CD = {
 			isa = PBXGroup;
 			children = (
-				24EF96DC2DF7D5A90086A8C1 /* SmartCorrect */,
-				24EF96ED2DF7D5AB0086A8C1 /* SmartCorrectTests */,
-				24EF96F72DF7D5AB0086A8C1 /* SmartCorrectUITests */,
-				24EF96DB2DF7D5A90086A8C1 /* Products */,
+				240476A22DF6975300A8A0CD /* SmartCorrect */,
+				240476B32DF6975600A8A0CD /* SmartCorrectTests */,
+				240476BD2DF6975600A8A0CD /* SmartCorrectUITests */,
+				240476A12DF6975300A8A0CD /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		24EF96DB2DF7D5A90086A8C1 /* Products */ = {
+		240476A12DF6975300A8A0CD /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				24EF96DA2DF7D5A90086A8C1 /* SmartCorrect.app */,
-				24EF96EA2DF7D5AB0086A8C1 /* SmartCorrectTests.xctest */,
-				24EF96F42DF7D5AB0086A8C1 /* SmartCorrectUITests.xctest */,
+				240476A02DF6975300A8A0CD /* SmartCorrect.app */,
+				240476B02DF6975600A8A0CD /* SmartCorrectTests.xctest */,
+				240476BA2DF6975600A8A0CD /* SmartCorrectUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,78 +100,79 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		24EF96D92DF7D5A90086A8C1 /* SmartCorrect */ = {
+		2404769F2DF6975300A8A0CD /* SmartCorrect */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 24EF96FE2DF7D5AB0086A8C1 /* Build configuration list for PBXNativeTarget "SmartCorrect" */;
+			buildConfigurationList = 240476C42DF6975600A8A0CD /* Build configuration list for PBXNativeTarget "SmartCorrect" */;
 			buildPhases = (
-				24EF96D62DF7D5A90086A8C1 /* Sources */,
-				24EF96D72DF7D5A90086A8C1 /* Frameworks */,
-				24EF96D82DF7D5A90086A8C1 /* Resources */,
+				2404769C2DF6975300A8A0CD /* Sources */,
+				2404769D2DF6975300A8A0CD /* Frameworks */,
+				2404769E2DF6975300A8A0CD /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				24EF96DC2DF7D5A90086A8C1 /* SmartCorrect */,
+				240476A22DF6975300A8A0CD /* SmartCorrect */,
 			);
 			name = SmartCorrect;
 			packageProductDependencies = (
+				240476CE2DF6AAFE00A8A0CD /* KeyboardShortcuts */,
 			);
 			productName = SmartCorrect;
-			productReference = 24EF96DA2DF7D5A90086A8C1 /* SmartCorrect.app */;
+			productReference = 240476A02DF6975300A8A0CD /* SmartCorrect.app */;
 			productType = "com.apple.product-type.application";
 		};
-		24EF96E92DF7D5AB0086A8C1 /* SmartCorrectTests */ = {
+		240476AF2DF6975600A8A0CD /* SmartCorrectTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 24EF97012DF7D5AB0086A8C1 /* Build configuration list for PBXNativeTarget "SmartCorrectTests" */;
+			buildConfigurationList = 240476C72DF6975600A8A0CD /* Build configuration list for PBXNativeTarget "SmartCorrectTests" */;
 			buildPhases = (
-				24EF96E62DF7D5AB0086A8C1 /* Sources */,
-				24EF96E72DF7D5AB0086A8C1 /* Frameworks */,
-				24EF96E82DF7D5AB0086A8C1 /* Resources */,
+				240476AC2DF6975600A8A0CD /* Sources */,
+				240476AD2DF6975600A8A0CD /* Frameworks */,
+				240476AE2DF6975600A8A0CD /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				24EF96EC2DF7D5AB0086A8C1 /* PBXTargetDependency */,
+				240476B22DF6975600A8A0CD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				24EF96ED2DF7D5AB0086A8C1 /* SmartCorrectTests */,
+				240476B32DF6975600A8A0CD /* SmartCorrectTests */,
 			);
 			name = SmartCorrectTests;
 			packageProductDependencies = (
 			);
 			productName = SmartCorrectTests;
-			productReference = 24EF96EA2DF7D5AB0086A8C1 /* SmartCorrectTests.xctest */;
+			productReference = 240476B02DF6975600A8A0CD /* SmartCorrectTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		24EF96F32DF7D5AB0086A8C1 /* SmartCorrectUITests */ = {
+		240476B92DF6975600A8A0CD /* SmartCorrectUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 24EF97042DF7D5AB0086A8C1 /* Build configuration list for PBXNativeTarget "SmartCorrectUITests" */;
+			buildConfigurationList = 240476CA2DF6975600A8A0CD /* Build configuration list for PBXNativeTarget "SmartCorrectUITests" */;
 			buildPhases = (
-				24EF96F02DF7D5AB0086A8C1 /* Sources */,
-				24EF96F12DF7D5AB0086A8C1 /* Frameworks */,
-				24EF96F22DF7D5AB0086A8C1 /* Resources */,
+				240476B62DF6975600A8A0CD /* Sources */,
+				240476B72DF6975600A8A0CD /* Frameworks */,
+				240476B82DF6975600A8A0CD /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				24EF96F62DF7D5AB0086A8C1 /* PBXTargetDependency */,
+				240476BC2DF6975600A8A0CD /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				24EF96F72DF7D5AB0086A8C1 /* SmartCorrectUITests */,
+				240476BD2DF6975600A8A0CD /* SmartCorrectUITests */,
 			);
 			name = SmartCorrectUITests;
 			packageProductDependencies = (
 			);
 			productName = SmartCorrectUITests;
-			productReference = 24EF96F42DF7D5AB0086A8C1 /* SmartCorrectUITests.xctest */;
+			productReference = 240476BA2DF6975600A8A0CD /* SmartCorrectUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		24EF96D22DF7D5A90086A8C1 /* Project object */ = {
+		240476982DF6975300A8A0CD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
@@ -175,56 +181,59 @@
 				LastUpgradeCheck = 1640;
 				ORGANIZATIONNAME = "Entopia Investment Inc";
 				TargetAttributes = {
-					24EF96D92DF7D5A90086A8C1 = {
+					2404769F2DF6975300A8A0CD = {
 						CreatedOnToolsVersion = 16.4;
 					};
-					24EF96E92DF7D5AB0086A8C1 = {
+					240476AF2DF6975600A8A0CD = {
 						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 24EF96D92DF7D5A90086A8C1;
+						TestTargetID = 2404769F2DF6975300A8A0CD;
 					};
-					24EF96F32DF7D5AB0086A8C1 = {
+					240476B92DF6975600A8A0CD = {
 						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 24EF96D92DF7D5A90086A8C1;
+						TestTargetID = 2404769F2DF6975300A8A0CD;
 					};
 				};
 			};
-			buildConfigurationList = 24EF96D52DF7D5A90086A8C1 /* Build configuration list for PBXProject "SmartCorrect" */;
+			buildConfigurationList = 2404769B2DF6975300A8A0CD /* Build configuration list for PBXProject "SmartCorrect" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 24EF96D12DF7D5A90086A8C1;
+			mainGroup = 240476972DF6975300A8A0CD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				240476CD2DF6AAFE00A8A0CD /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 24EF96DB2DF7D5A90086A8C1 /* Products */;
+			productRefGroup = 240476A12DF6975300A8A0CD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				24EF96D92DF7D5A90086A8C1 /* SmartCorrect */,
-				24EF96E92DF7D5AB0086A8C1 /* SmartCorrectTests */,
-				24EF96F32DF7D5AB0086A8C1 /* SmartCorrectUITests */,
+				2404769F2DF6975300A8A0CD /* SmartCorrect */,
+				240476AF2DF6975600A8A0CD /* SmartCorrectTests */,
+				240476B92DF6975600A8A0CD /* SmartCorrectUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		24EF96D82DF7D5A90086A8C1 /* Resources */ = {
+		2404769E2DF6975300A8A0CD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		24EF96E82DF7D5AB0086A8C1 /* Resources */ = {
+		240476AE2DF6975600A8A0CD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		24EF96F22DF7D5AB0086A8C1 /* Resources */ = {
+		240476B82DF6975600A8A0CD /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -234,21 +243,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		24EF96D62DF7D5A90086A8C1 /* Sources */ = {
+		2404769C2DF6975300A8A0CD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		24EF96E62DF7D5AB0086A8C1 /* Sources */ = {
+		240476AC2DF6975600A8A0CD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		24EF96F02DF7D5AB0086A8C1 /* Sources */ = {
+		240476B62DF6975600A8A0CD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -258,20 +267,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		24EF96EC2DF7D5AB0086A8C1 /* PBXTargetDependency */ = {
+		240476B22DF6975600A8A0CD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 24EF96D92DF7D5A90086A8C1 /* SmartCorrect */;
-			targetProxy = 24EF96EB2DF7D5AB0086A8C1 /* PBXContainerItemProxy */;
+			target = 2404769F2DF6975300A8A0CD /* SmartCorrect */;
+			targetProxy = 240476B12DF6975600A8A0CD /* PBXContainerItemProxy */;
 		};
-		24EF96F62DF7D5AB0086A8C1 /* PBXTargetDependency */ = {
+		240476BC2DF6975600A8A0CD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 24EF96D92DF7D5A90086A8C1 /* SmartCorrect */;
-			targetProxy = 24EF96F52DF7D5AB0086A8C1 /* PBXContainerItemProxy */;
+			target = 2404769F2DF6975300A8A0CD /* SmartCorrect */;
+			targetProxy = 240476BB2DF6975600A8A0CD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		24EF96FC2DF7D5AB0086A8C1 /* Debug */ = {
+		240476C22DF6975600A8A0CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -332,10 +341,11 @@
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
-		24EF96FD2DF7D5AB0086A8C1 /* Release */ = {
+		240476C32DF6975600A8A0CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -388,10 +398,11 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
-		24EF96FF2DF7D5AB0086A8C1 /* Debug */ = {
+		240476C52DF6975600A8A0CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -404,6 +415,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SmartCorrect/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -419,7 +432,7 @@
 			};
 			name = Debug;
 		};
-		24EF97002DF7D5AB0086A8C1 /* Release */ = {
+		240476C62DF6975600A8A0CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -432,6 +445,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SmartCorrect/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -447,7 +462,7 @@
 			};
 			name = Release;
 		};
-		24EF97022DF7D5AB0086A8C1 /* Debug */ = {
+		240476C82DF6975600A8A0CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -465,7 +480,7 @@
 			};
 			name = Debug;
 		};
-		24EF97032DF7D5AB0086A8C1 /* Release */ = {
+		240476C92DF6975600A8A0CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -483,7 +498,7 @@
 			};
 			name = Release;
 		};
-		24EF97052DF7D5AB0086A8C1 /* Debug */ = {
+		240476CB2DF6975600A8A0CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -499,7 +514,7 @@
 			};
 			name = Debug;
 		};
-		24EF97062DF7D5AB0086A8C1 /* Release */ = {
+		240476CC2DF6975600A8A0CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -518,43 +533,62 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		24EF96D52DF7D5A90086A8C1 /* Build configuration list for PBXProject "SmartCorrect" */ = {
+		2404769B2DF6975300A8A0CD /* Build configuration list for PBXProject "SmartCorrect" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				24EF96FC2DF7D5AB0086A8C1 /* Debug */,
-				24EF96FD2DF7D5AB0086A8C1 /* Release */,
+				240476C22DF6975600A8A0CD /* Debug */,
+				240476C32DF6975600A8A0CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		24EF96FE2DF7D5AB0086A8C1 /* Build configuration list for PBXNativeTarget "SmartCorrect" */ = {
+		240476C42DF6975600A8A0CD /* Build configuration list for PBXNativeTarget "SmartCorrect" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				24EF96FF2DF7D5AB0086A8C1 /* Debug */,
-				24EF97002DF7D5AB0086A8C1 /* Release */,
+				240476C52DF6975600A8A0CD /* Debug */,
+				240476C62DF6975600A8A0CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		24EF97012DF7D5AB0086A8C1 /* Build configuration list for PBXNativeTarget "SmartCorrectTests" */ = {
+		240476C72DF6975600A8A0CD /* Build configuration list for PBXNativeTarget "SmartCorrectTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				24EF97022DF7D5AB0086A8C1 /* Debug */,
-				24EF97032DF7D5AB0086A8C1 /* Release */,
+				240476C82DF6975600A8A0CD /* Debug */,
+				240476C92DF6975600A8A0CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		24EF97042DF7D5AB0086A8C1 /* Build configuration list for PBXNativeTarget "SmartCorrectUITests" */ = {
+		240476CA2DF6975600A8A0CD /* Build configuration list for PBXNativeTarget "SmartCorrectUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				24EF97052DF7D5AB0086A8C1 /* Debug */,
-				24EF97062DF7D5AB0086A8C1 /* Release */,
+				240476CB2DF6975600A8A0CD /* Debug */,
+				240476CC2DF6975600A8A0CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		240476CD2DF6AAFE00A8A0CD /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		240476CE2DF6AAFE00A8A0CD /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 240476CD2DF6AAFE00A8A0CD /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 24EF96D22DF7D5A90086A8C1 /* Project object */;
+	rootObject = 240476982DF6975300A8A0CD /* Project object */;
 }

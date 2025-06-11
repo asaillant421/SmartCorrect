@@ -9,7 +9,7 @@
 import AppKit
 
 class SmartCorrectServiceProvider : NSObject {
-    @objc func mundungus(
+    @objc func requestCorrection(
         _ pasteboard: NSPasteboard,
         userData: String?,
         error: AutoreleasingUnsafeMutablePointer<NSString>
