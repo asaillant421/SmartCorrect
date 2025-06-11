@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct SmartCorrectApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @Environment(\.openSettings) private var openSettings
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -30,5 +31,26 @@ struct SmartCorrectApp: App {
             ContentView()
         }
         .modelContainer(sharedModelContainer)
+        
+        #if os(macOS)
+        Settings {
+            SettingsView()
+        }
+        .windowResizability(.contentMinSize)
+        #endif
+        
+        MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {
+            Button("About") {
+                NSApplication.shared.orderFrontStandardAboutPanel(nil)
+            }
+            Divider()
+            Button("Settings...") {
+                openSettings()
+            }
+            Divider()
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
+            }.keyboardShortcut("q")
+        }
     }
 }

@@ -9,9 +9,9 @@
 import AppKit
 
 class AppDelegate : NSObject, NSApplicationDelegate {
+    private var statusItem: NSStatusItem!
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("Yo.")
-        NSApplication.shared
-                    .servicesProvider = SmartCorrectServiceProvider()
+        NSApplication.shared.servicesProvider = SmartCorrectServiceProvider()
     }
 }
