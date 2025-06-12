@@ -5,6 +5,36 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSServices</key>
-	<false/>
+    <array>
+        <dict>
+            <key>NSKeyEquivalent</key>
+            <dict>
+                <key>default</key>
+                <string>Z</string>
+            </dict>
+            <key>NSMenuItem</key>
+            <dict>
+                <key>default</key>
+                <string>SmartCorrect</string>
+            </dict>
+            <key>NSMessage</key>
+            <string>requestCorrection</string>
+            <key>NSPortName</key>
+            <string>SmartCorrect</string>
+            <key>NSRestricted</key>
+            <false/>
+            <key>NSRequiredContext</key>
+            <dict/>
+            <key>NSReturnTypes</key>
+            <array>
+                <string>NSStringPboardType</string>
+            </array>
+            <key>NSSendTypes</key>
+            <array>
+                <string>NSStringPboardType</string>
+            </array>
+        </dict>
+    </array>
+
 </dict>
 </plist>
