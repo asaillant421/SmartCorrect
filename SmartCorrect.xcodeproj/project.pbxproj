@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		240476CF2DF6AAFE00A8A0CD /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 240476CE2DF6AAFE00A8A0CD /* KeyboardShortcuts */; };
+		2455C5452DFA44C200E73679 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 2455C5442DFA44C200E73679 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2455C5452DFA44C200E73679 /* KeychainAccess in Frameworks */,
 				240476CF2DF6AAFE00A8A0CD /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +120,7 @@
 			name = SmartCorrect;
 			packageProductDependencies = (
 				240476CE2DF6AAFE00A8A0CD /* KeyboardShortcuts */,
+				2455C5442DFA44C200E73679 /* KeychainAccess */,
 			);
 			productName = SmartCorrect;
 			productReference = 240476A02DF6975300A8A0CD /* SmartCorrect.app */;
@@ -205,6 +208,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				240476CD2DF6AAFE00A8A0CD /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				2455C5432DFA44C200E73679 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 240476A12DF6975300A8A0CD /* Products */;
@@ -580,6 +584,14 @@
 				minimumVersion = 2.3.0;
 			};
 		};
+		2455C5432DFA44C200E73679 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -587,6 +599,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 240476CD2DF6AAFE00A8A0CD /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
+		};
+		2455C5442DFA44C200E73679 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2455C5432DFA44C200E73679 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
