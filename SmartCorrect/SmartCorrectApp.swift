@@ -7,11 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import Combine
 
 @main
 struct SmartCorrectApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.openWindow) private var openWindow
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -27,17 +29,15 @@ struct SmartCorrectApp: App {
     }()
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        WindowGroup(id: WindowIdentifier.smartCorrect.rawValue) {
+            CorrectionView()
         }
         .modelContainer(sharedModelContainer)
         
-        #if os(macOS)
         Settings {
             SettingsView()
         }
         .windowResizability(.contentMinSize)
-        #endif
         
         MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {
             Button("About") {

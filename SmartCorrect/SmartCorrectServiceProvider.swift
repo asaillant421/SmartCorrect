@@ -7,8 +7,12 @@
 //
 
 import AppKit
+import SwiftUI
 
 class SmartCorrectServiceProvider : NSObject {
+    //@Environment(\.openWindow) private var openWindow
+    @AppStorage("textForCorrection") var textForCorrection: String?
+    
     @objc func requestCorrection(
         _ pasteboard: NSPasteboard,
         userData: String?,
@@ -20,10 +24,18 @@ class SmartCorrectServiceProvider : NSObject {
         ) else {
             return
         }
-        pasteboard.clearContents()
-        pasteboard.setString(
-            String(string.reversed()),
-            forType: .string
-        )
+//        pasteboard.clearContents()
+//        pasteboard.setString(
+//            String(string.reversed()),
+//            forType: .string
+//        )
+        
+        openCorrectionWindow(text: string)
+    }
+    
+    private func openCorrectionWindow(text: String) {
+        textForCorrection = text
+        NSRunningApplication.current.activate(options: [.activateAllWindows])
+        //openWindow(id: WindowIdentifier.smartCorrect.rawValue, value: text)
     }
 }

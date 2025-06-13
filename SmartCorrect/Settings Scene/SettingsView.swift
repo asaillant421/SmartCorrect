@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-@available(macOS 15.0, *)
 struct SettingsView : View {
     var body: some View {
             TabView {
