@@ -12,6 +12,13 @@ import SwiftUI
 class SmartCorrectServiceProvider : NSObject {
     //@Environment(\.openWindow) private var openWindow
     @AppStorage("textForCorrection") var textForCorrection: String?
+    private let openCorrectionWindow: (String) -> Void
+    
+    init(openCorrectionWindow: @escaping (String) -> Void) {
+        self.openCorrectionWindow = openCorrectionWindow
+        super.init()
+    }
+    
     
     @objc func requestCorrection(
         _ pasteboard: NSPasteboard,
@@ -30,12 +37,8 @@ class SmartCorrectServiceProvider : NSObject {
 //            forType: .string
 //        )
         
-        openCorrectionWindow(text: string)
+        openCorrectionWindow(string)
     }
     
-    private func openCorrectionWindow(text: String) {
-        textForCorrection = text
-        NSRunningApplication.current.activate(options: [.activateAllWindows])
-        //openWindow(id: WindowIdentifier.smartCorrect.rawValue, value: text)
-    }
+    
 }

@@ -9,10 +9,15 @@
 import SwiftUI
 
 actor CorrectionService {
-    @AppSecureStorage("apiKey") private var apiKey: String?
-    @AppStorage("prompt") private var prompt = ""
+    private let apiKey: String
     
-    func fetchCorrection(for text: String) async throws -> String {
-        return text
+    init(apiKey: String) {
+        self.apiKey = apiKey
+    }
+    
+    func fetchCorrection(for text: String, usingPrompt prompt: String = Constants.defaultMainPrompt) async throws -> String {
+        return await Task {
+            return String(text.reversed())
+        }.value
     }
 }

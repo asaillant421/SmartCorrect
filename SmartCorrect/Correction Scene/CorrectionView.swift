@@ -17,7 +17,6 @@ struct CorrectionView : View {
             Label("Improve Writing", systemImage: "sparkles")
             
             TextEditor(text: $textForCorrection)
-                .disabled(!textForCorrection.isEmpty)
             
             TextEditor(text: $viewModel.correctedText)
             
@@ -39,9 +38,15 @@ struct CorrectionView : View {
                 }
                 Spacer()
                 
-                Button("Post response to app") {
+                Button("Paste Correction") {
                     // TODO
                 }
+                .disabled(viewModel.correctedText.isEmpty)
+                
+                Button("Ask ChatGPT") {
+                    // TODO
+                }
+                .disabled(textForCorrection.isEmpty)
             }
         }
         .padding()

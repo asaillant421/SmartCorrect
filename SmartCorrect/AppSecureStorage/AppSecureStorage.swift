@@ -13,12 +13,15 @@ import KeychainAccess
 @propertyWrapper
 public struct AppSecureStorage : DynamicProperty {
     private let key: String
-    private let accessibility: Accessibility
     private let keychain = Keychain(service: "com.entopia.smartcorrect")
     
     public var wrappedValue: String? {
         get {
-            try? keychain.getString(key)
+            guard let str = try? keychain.getString(key) else {
+                return ""
+            }
+            
+            return str
         }
         nonmutating set {
             if let newValue, !newValue.isEmpty {
@@ -27,11 +30,15 @@ public struct AppSecureStorage : DynamicProperty {
         }
     }
     
+    public var projectedValue: Binding<String> {
+        get {
+            Binding(get: { self.wrappedValue ?? "" }, set: { self.wrappedValue = $0 })
+        }
+    }
+    
     public init(
-        _ key: String,
-        accessibility: Accessibility = .whenUnlocked
+        _ key: String
     ) {
         self.key = key
-        self.accessibility = accessibility
     }
 }

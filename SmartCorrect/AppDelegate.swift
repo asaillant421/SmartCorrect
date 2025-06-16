@@ -8,14 +8,20 @@
 
 import AppKit
 import Combine
+import SwiftUI
 
 class AppDelegate : NSObject, NSApplicationDelegate {
+    @Environment(\.openWindow) private var openWindow
     private var statusItem: NSStatusItem!
     private var observer: NSObjectProtocol?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApplication.shared.servicesProvider = SmartCorrectServiceProvider()
-        
-        observer = NotificationCenter.default.addObserver(forName: Notification.smartCorrectServiceActivatedNotification, object: nil, queue: nil, using: { note in })
+        NSApplication.shared.servicesProvider = SmartCorrectServiceProvider(openCorrectionWindow: openCorrectionWindow)
+    }
+    
+    private func openCorrectionWindow(text: String) {
+        //NSRunningApplication.current.activate(options: [.activateAllWindows])
+        NSApplication.shared.activate()
+        openWindow(id: WindowIdentifier.smartCorrect.rawValue, value: text)
     }
 }

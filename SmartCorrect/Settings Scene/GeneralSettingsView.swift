@@ -11,7 +11,7 @@ import SwiftUI
 struct GeneralSettingsView : View {
     @AppStorage("startAtLogin") private var startAtLogin = false
     @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
-    @AppStorage("aiKey") private var aiKey = ""
+    @AppSecureStorage("apiKey") private var apiKey: String?
     
     var body: some View {
         Form {
@@ -23,8 +23,9 @@ struct GeneralSettingsView : View {
                 Text("Show Icon on Menu Bar")
                 Text("Display the app's icon in the menu bar for quick access to features and settings.")
             }
-            Spacer()
-            TextField("OpenAI API Key", text: $aiKey)
+            SecureField("OpenAI API Key", text: $apiKey, prompt: Text("E.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"))
+                .lineLimit(3, reservesSpace: true)
+                
         }
     }
 }
