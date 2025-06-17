@@ -9,18 +9,22 @@
 import SwiftUI
 
 struct CorrectionView : View {
-    @State private var viewModel = CorrectionViewModel()
-    @AppStorage("textForCorrection") var textForCorrection: String = ""
+    @AppSecureStorage("apiKey") private var apiKey: String?
+    @State private var viewModel: CorrectionViewModel?
+    @AppStorage("mainPrompt") private var mainPrompt = Constants.defaultMainPrompt
+    @AppStorage("secondaryPrompt") private var secondaryPrompt = Constants.defaultSecondaryPrompt
+    @AppStorage("textForCorrection") private var textForCorrection = ""
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Improve Writing", systemImage: "sparkles")
             
-            TextEditor(text: $textForCorrection)
-            
-            TextEditor(text: $viewModel.correctedText)
-            
-            TextEditor(text: $viewModel.additionalInstructions)
+            Group {
+
+                if let viewModel {
+                    CorrectionEditorView(viewModel: viewModel)
+                }
+            }
             
             HStack {
                 Button("Make more formal") {
@@ -32,23 +36,26 @@ struct CorrectionView : View {
                 }
             }
             
-            HStack {
-                Toggle(isOn: $viewModel.shouldSave) {
-                    Text("Store this update and use it to improve future suggestions based on your preferences.")
-                }
-                Spacer()
+                Group {
+                    if let viewModel {
+                        CorrectionButtonFooterView(viewModel: viewModel)
+                    }
                 
-                Button("Paste Correction") {
-                    // TODO
                 }
-                .disabled(viewModel.correctedText.isEmpty)
-                
-                Button("Ask ChatGPT") {
-                    // TODO
-                }
-                .disabled(textForCorrection.isEmpty)
+            
+        }
+        .onAppear {
+            if nil == viewModel, let apiKey {
+                viewModel = CorrectionViewModel(apiKey: apiKey, text: textForCorrection, mainPrompt: mainPrompt, secondaryPrompt: secondaryPrompt)
             }
         }
+        .onDisappear {
+            viewModel = nil
+        }
         .padding()
+    }
+    
+    init(text: String) {
+        textForCorrection = text
     }
 }

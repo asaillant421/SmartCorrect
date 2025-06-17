@@ -1,0 +1,27 @@
+//
+//  CorrectionEditorView.swift
+//  SmartCorrect
+//
+//  Created by מאיר רדנוביץ׳ on 17/06/2025.
+//  Copyright © 2025 Entopia Investment Inc. All rights reserved.
+//
+
+import SwiftUI
+
+struct CorrectionEditorView : View {
+    @Bindable var viewModel: CorrectionViewModel
+    
+    var body: some View {
+        VStack {
+            TextEditor(text: $viewModel.textForCorrection)
+            
+            TextEditor(text: $viewModel.correctedText)
+            
+            TextEditor(text: $viewModel.additionalInstructions)
+        }
+    }
+}
+
+#Preview {
+    CorrectionEditorView(viewModel: CorrectionViewModel(apiKey: "foop"))
+}

@@ -15,9 +15,11 @@ actor CorrectionService {
         self.apiKey = apiKey
     }
     
-    func fetchCorrection(for text: String, usingPrompt prompt: String = Constants.defaultMainPrompt) async throws -> String {
+    func fetchCorrection(for text: String, prompt: String = Constants.defaultMainPrompt, additionalInstructions: String? = nil) async throws -> String {
         return await Task {
             return String(text.reversed())
         }.value
     }
+    
+
 }

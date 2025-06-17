@@ -14,7 +14,6 @@ struct SmartCorrectApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
-//    @State private var viewModel = CorrectionViewModel()
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -31,7 +30,7 @@ struct SmartCorrectApp: App {
 
     var body: some Scene {
         WindowGroup(id: WindowIdentifier.smartCorrect.rawValue, for: String.self) { $text in
-            CorrectionView(textForCorrection: text ?? "")
+            CorrectionView(text: text ?? "")
         }
         .modelContainer(sharedModelContainer)
         

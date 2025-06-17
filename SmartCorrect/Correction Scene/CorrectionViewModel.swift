@@ -10,30 +10,30 @@ import SwiftUI
 
 @Observable
 class CorrectionViewModel {
-    @AppStorage("mainPrompt") private var mainPrompt: String?
-    @AppSecureStorage("apiKey") private var apiKey: String? {
-        didSet {
-            guard let apiKey, !apiKey.isEmpty else {
-                service = nil
-                return
-            }
-            
-            service = CorrectionService(apiKey: apiKey)
-        }
-    }
+    var mainPrompt: String
+    var secondaryPrompt: String
+    var shouldSaveAdditionalInstructions = false
+    private let apiKey: String
     
     var textForCorrection = ""
     var correctedText = ""
-    @AppStorage("shouldSaveAdditionalInstructions") var shouldSaveAdditionalInstructions: Bool = false
     var additionalInstructions = ""
     
-    private var service: CorrectionService?
+    private let service: CorrectionService
     
-    init() {
-        
+    init(apiKey: String, text: String = "", mainPrompt: String = "", secondaryPrompt: String = "") {
+        self.apiKey = apiKey
+        self.textForCorrection = text
+        self.mainPrompt = mainPrompt
+        self.secondaryPrompt = mainPrompt
+        service = CorrectionService(apiKey: apiKey)
     }
     
     func correctText() async throws {
-        correctedText = try await service.fetchCorrection(for: textForCorrection, usingPrompt: mainPrompt ?? Constants.defaultMainPrompt)
+        correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: mainPrompt)
+    }
+    
+    func improveCorrection() async throws {
+        correctedText = try await service.fetchCorrection(for: correctedText, prompt: secondaryPrompt, additionalInstructions: additionalInstructions)
     }
 }
