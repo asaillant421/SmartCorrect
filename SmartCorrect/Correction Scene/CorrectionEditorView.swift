@@ -20,6 +20,10 @@ struct CorrectionEditorView : View {
             TextEditor(text: $viewModel.additionalInstructions)
         }
     }
+    
+    init(viewModel: CorrectionViewModel) {
+        self.viewModel = viewModel
+    }
 }
 
 #Preview {

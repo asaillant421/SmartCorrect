@@ -11,7 +11,6 @@ import SwiftUI
 
 class SmartCorrectServiceProvider : NSObject {
     //@Environment(\.openWindow) private var openWindow
-    @AppStorage("textForCorrection") var textForCorrection: String?
     private let openCorrectionWindow: (String) -> Void
     
     init(openCorrectionWindow: @escaping (String) -> Void) {

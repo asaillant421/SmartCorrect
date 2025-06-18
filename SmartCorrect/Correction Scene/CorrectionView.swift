@@ -9,22 +9,18 @@
 import SwiftUI
 
 struct CorrectionView : View {
-    @AppSecureStorage("apiKey") private var apiKey: String?
-    @State private var viewModel: CorrectionViewModel?
-    @AppStorage("mainPrompt") private var mainPrompt = Constants.defaultMainPrompt
-    @AppStorage("secondaryPrompt") private var secondaryPrompt = Constants.defaultSecondaryPrompt
-    @AppStorage("textForCorrection") private var textForCorrection = ""
-    
+    @Environment(\.openSettings) private var openSettings
+    @Environment(CorrectionViewModel.self) var viewModel
+//    
+//    init() {
+//        
+//    }
+//    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Improve Writing", systemImage: "sparkles")
             
-            Group {
-
-                if let viewModel {
-                    CorrectionEditorView(viewModel: viewModel)
-                }
-            }
+            CorrectionEditorView(viewModel: viewModel)
             
             HStack {
                 Button("Make more formal") {
@@ -36,26 +32,12 @@ struct CorrectionView : View {
                 }
             }
             
-                Group {
-                    if let viewModel {
-                        CorrectionButtonFooterView(viewModel: viewModel)
-                    }
-                
-                }
-            
-        }
-        .onAppear {
-            if nil == viewModel, let apiKey {
-                viewModel = CorrectionViewModel(apiKey: apiKey, text: textForCorrection, mainPrompt: mainPrompt, secondaryPrompt: secondaryPrompt)
-            }
-        }
-        .onDisappear {
-            viewModel = nil
+            CorrectionButtonFooterView(viewModel: viewModel)
         }
         .padding()
     }
     
-    init(text: String) {
-        textForCorrection = text
+    private func solicitAPIKey() {
+        openSettings()
     }
 }

@@ -7,11 +7,12 @@
 //
 
 import SwiftUI
+import Combine
 
 @Observable
 class CorrectionViewModel {
-    var mainPrompt: String
-    var secondaryPrompt: String
+    //@AppStorage("mainPrompt") private var mainPrompt = Constants.defaultMainPrompt
+    //@AppStorage("secondaryPrompt") private var secondaryPrompt = Constants.defaultSecondaryPrompt
     var shouldSaveAdditionalInstructions = false
     private let apiKey: String
     
@@ -19,21 +20,35 @@ class CorrectionViewModel {
     var correctedText = ""
     var additionalInstructions = ""
     
+    private var cancellables: Set<AnyCancellable> = []
     private let service: CorrectionService
     
-    init(apiKey: String, text: String = "", mainPrompt: String = "", secondaryPrompt: String = "") {
+    init(apiKey: String) {
         self.apiKey = apiKey
-        self.textForCorrection = text
-        self.mainPrompt = mainPrompt
-        self.secondaryPrompt = mainPrompt
         service = CorrectionService(apiKey: apiKey)
+        let cancellable = NotificationCenter.default.publisher(for: Notification.textSelectedNotification)
+            .sink(receiveValue: handleNotification(note:))
+        
+        cancellables.insert(cancellable)
     }
     
     func correctText() async throws {
-        correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: mainPrompt)
+        correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: "mainPrompt")
     }
     
     func improveCorrection() async throws {
-        correctedText = try await service.fetchCorrection(for: correctedText, prompt: secondaryPrompt, additionalInstructions: additionalInstructions)
+        correctedText = try await service.fetchCorrection(for: correctedText, prompt: "secondaryPrompt", additionalInstructions: additionalInstructions)
+    }
+    
+    private func handleNotification(note: Notification) {
+        guard let selectedText = note.userInfo?[Notification.selectedTextKey] as? String else {
+            return
+        }
+        
+        self.textForCorrection = selectedText
+        
+        Task {
+            try await correctText()
+        }
     }
 }
