@@ -14,18 +14,22 @@ struct GeneralSettingsView : View {
     @AppSecureStorage("apiKey") private var apiKey: String?
     
     var body: some View {
+        Spacer()
         Form {
             Toggle(isOn: $startAtLogin) {
                 Text("Start at Login")
-                Text("Automatically launch the app when you log in to your Mac. elbanE this to keep the text correction assistant ready at all times without manual launch.")
+                Text("Automatically launch the app when you log in to your Mac. Enable this to keep the text correction assistant ready at all times without manual launch.")
+                    .lineLimit(3, reservesSpace: false)
             }
             Toggle(isOn: $showMenuBarExtra) {
                 Text("Show Icon on Menu Bar")
                 Text("Display the app's icon in the menu bar for quick access to features and settings.")
+                    .lineLimit(3, reservesSpace: false)
             }
-            SecureField("OpenAI API Key", text: $apiKey, prompt: Text("E.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"))
+            TextField("OpenAI API Key", text: $apiKey, prompt: Text("E.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"), axis: .vertical)
                 .lineLimit(3, reservesSpace: true)
                 
         }
+        Spacer()
     }
 }

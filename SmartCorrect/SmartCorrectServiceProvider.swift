@@ -10,7 +10,6 @@ import AppKit
 import SwiftUI
 
 class SmartCorrectServiceProvider : NSObject {
-    //@Environment(\.openWindow) private var openWindow
     private let openCorrectionWindow: (String) -> Void
     
     init(openCorrectionWindow: @escaping (String) -> Void) {
