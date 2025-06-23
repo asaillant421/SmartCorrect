@@ -14,11 +14,11 @@ extension NSApplication {
     }
     
     func activate(windowIdentifier: WindowIdentifier, sender: NSObject? = nil) {
-        activate()
         
         guard let w = window(withIdentifier: windowIdentifier) else { return }
         
         w.makeMain()
         w.makeKeyAndOrderFront(sender)
+        activate(ignoringOtherApps: true)
     }
 }

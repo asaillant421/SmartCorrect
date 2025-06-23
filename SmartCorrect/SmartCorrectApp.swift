@@ -50,7 +50,12 @@ struct SmartCorrectApp: App {
                 }
             }
         }
-        .windowLevel(.floating)
+        .windowManagerRole(.principal)
+        .windowLevel(.normal)
+        //.windowStyle(.plain)
+        .restorationBehavior(.automatic)
+        
+        
         //.defaultLaunchBehavior(.suppressed)
         //.handlesExternalEvents(matching: ["*"])
         
@@ -66,7 +71,9 @@ struct SmartCorrectApp: App {
         .windowResizability(.contentSize)
         
         MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {
-            WindowVisibilityToggle(windowID: WindowIdentifier.smartCorrect.rawValue)
+            Button("Improve Text") {
+                openMainWindow()
+            }
             Divider()
             Button("About") {
                 NSApplication.shared.orderFrontStandardAboutPanel(nil)
