@@ -12,11 +12,12 @@ struct CorrectionEditorView : View {
     @Bindable var viewModel: CorrectionViewModel
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Original text:")
             TextEditor(text: $viewModel.textForCorrection)
-            
+            Text("Suggested correction:")
             TextEditor(text: $viewModel.correctedText)
-            
+            Text("Additional instructions:")
             TextEditor(text: $viewModel.additionalInstructions)
         }
     }
