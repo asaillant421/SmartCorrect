@@ -6,6 +6,8 @@
 //  Copyright © 2025 Entopia Investment Inc. All rights reserved.
 //
 
+import Foundation
+
 enum WindowIdentifier : String {
     case smartCorrect = "smart-correct-window"
     case settingsWindow = "settings-window"
@@ -25,4 +27,7 @@ enum Constants {
     
     Only return the revised text with the changes applied.
     """
+    
+    static let encoder = JSONEncoder()
+    static let decoder = JSONDecoder()
 }

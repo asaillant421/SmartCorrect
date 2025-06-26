@@ -11,8 +11,6 @@ import Combine
 
 @Observable
 class CorrectionViewModel {
-    //@AppStorage("mainPrompt") private var mainPrompt = Constants.defaultMainPrompt
-    //@AppStorage("secondaryPrompt") private var secondaryPrompt = Constants.defaultSecondaryPrompt
     var shouldSaveAdditionalInstructions = false
     private let apiKey: String
     
@@ -26,7 +24,7 @@ class CorrectionViewModel {
     init(apiKey: String) {
         self.apiKey = apiKey
         service = CorrectionService(apiKey: apiKey)
-        let cancellable = NotificationCenter.default.publisher(for: Notification.textSelectedNotification)
+        let cancellable = NotificationCenter.default.publisher(for: Notification.serviceActivated)
             .sink(receiveValue: handleNotification(note:))
         
         cancellables.insert(cancellable)
@@ -36,8 +34,9 @@ class CorrectionViewModel {
         correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: "mainPrompt")
     }
     
-    func improveCorrection() async throws {
-        correctedText = try await service.fetchCorrection(for: correctedText, prompt: "secondaryPrompt", additionalInstructions: additionalInstructions)
+    func improveCorrection(withModifications extraInstructions: String? = nil) async throws {
+        let additional = extraInstructions ?? additionalInstructions
+        correctedText = try await service.fetchCorrection(for: correctedText, prompt: "secondaryPrompt", additionalInstructions: additional)
     }
     
     private func handleNotification(note: Notification) {

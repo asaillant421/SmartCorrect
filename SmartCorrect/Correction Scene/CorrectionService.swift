@@ -10,9 +10,11 @@ import SwiftUI
 
 actor CorrectionService {
     private let apiKey: String
+    private let model: GPTModel
     
-    init(apiKey: String) {
+    init(apiKey: String, model: GPTModel = .gpt35turbo) {
         self.apiKey = apiKey
+        self.model = model
     }
     
     func fetchCorrection(for text: String, prompt: String = Constants.defaultMainPrompt, additionalInstructions: String? = nil) async throws -> String {

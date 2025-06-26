@@ -9,8 +9,7 @@
 import Foundation
 
 extension Notification {
-    static let smartCorrectServiceActivatedNotification = Notification.Name("SmartCorrectServiceActivatedNotification")
-    static let textSelectedNotification = Notification.Name("TextSelectedNotification")
+    static let serviceActivated = Notification.Name("SmartCorrectServiceActivatedNotification")
     
     static let selectedTextKey = "selectedTextKey"
 }

@@ -20,7 +20,7 @@ struct SmartCorrectApp: App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Prompt.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
@@ -32,7 +32,7 @@ struct SmartCorrectApp: App {
     }()
     
     var body: some Scene {
-        Window(Text("Flumpy"), id: WindowIdentifier.smartCorrect.rawValue) {
+        Window(Text("SmartCorrect"), id: WindowIdentifier.smartCorrect.rawValue) {
             Group {
                 if let viewModel {
                     CorrectionView()
@@ -50,9 +50,9 @@ struct SmartCorrectApp: App {
                 }
             }
         }
+        .modelContainer(sharedModelContainer)
         .windowManagerRole(.principal)
         .windowLevel(.normal)
-        //.windowStyle(.plain)
         .restorationBehavior(.automatic)
         
         
@@ -68,6 +68,7 @@ struct SmartCorrectApp: App {
                     maxHeight: 800
                 )
         }
+        .modelContainer(sharedModelContainer)
         .windowResizability(.contentSize)
         
         MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {
