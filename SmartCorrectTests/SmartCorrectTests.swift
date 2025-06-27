@@ -29,7 +29,7 @@ struct SmartCorrectTests {
         
         let response: ResponsesAPIResponse = try await APIManager.shared.sendRequest(endpoint: .responses, params: req, authToken: "Bearer \(apiKey)")
         
-        let outputText = try #require(response.outputText)
+        let outputText = try #require(response.output.first?.content.first?.text, "No output text")
         #expect(!outputText.isEmpty)
     }
 }

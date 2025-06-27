@@ -17,7 +17,6 @@ struct ResponsesAPIResponse: Codable {
     let instructions: String?
     let metadata: [String: String]?
     let output: [OutputMessage]
-    let outputText: String?
     let status: String
     let usage: Usage?
     let previousResponseId: String?
@@ -33,7 +32,6 @@ struct ResponsesAPIResponse: Codable {
         case id, object
         case createdAt = "created_at"
         case model, error, instructions, metadata, output
-        case outputText = "output_text"
         case status, usage
         case previousResponseId = "previous_response_id"
         case temperature, topP = "top_p"

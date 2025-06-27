@@ -31,8 +31,15 @@ actor CorrectionService {
         
         let response: ResponsesAPIResponse = try await APIManager.shared.sendRequest(endpoint: .responses, params: request, authToken: "Bearer \(apiKey)")
         
-        return response.outputText ?? text
+        guard let output = response.output.first,
+              output.type == "output_text",
+              let content = output.content.first,
+              let outputText = content.text else {
+            throw APIError(message: "Response had no valid text content", type: "invalid_response", param: response.id, code: "invalid_response")
+        }
+        
+        return outputText
     }
     
-
+    
 }
