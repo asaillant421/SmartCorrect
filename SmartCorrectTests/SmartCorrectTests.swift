@@ -32,4 +32,15 @@ struct SmartCorrectTests {
         let outputText = try #require(response.output.first?.content.first?.text, "No output text")
         #expect(!outputText.isEmpty)
     }
+    
+    @Test func fetchCorrections() async throws {
+        let apiKey = try #require(apiKey, "API key not set")
+        #expect(!apiKey.isEmpty)
+        
+        let service = CorrectionService(apiKey: apiKey, model: .gpt35turbo)
+        
+        let improvedVersion = try await service.fetchCorrection(for: "I just received message the boys are now going swimming and can not call tonight Please try to have them call me tonight and tomorrow before shabbos!! In future message me first and give me time to call")
+        
+        #expect(!improvedVersion.isEmpty)
+    }
 }

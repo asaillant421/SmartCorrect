@@ -31,12 +31,19 @@ class CorrectionViewModel {
     }
     
     func correctText() async throws {
-        correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: "mainPrompt")
+        if additionalInstructions.isEmpty {
+            correctedText = try await service.fetchCorrection(for: textForCorrection)
+        } else {
+            try await improveCorrection(withModifications: additionalInstructions)
+        }
     }
     
     func improveCorrection(withModifications extraInstructions: String? = nil) async throws {
         let additional = extraInstructions ?? additionalInstructions
-        correctedText = try await service.fetchCorrection(for: correctedText, prompt: "secondaryPrompt", additionalInstructions: additional)
+        
+        let modifiedPrompt = Constants.defaultSecondaryPrompt.replacingOccurrences(of: Constants.defaultSecondaryPromptInstructionPlaceholder, with: additional)
+        
+        correctedText = try await service.fetchCorrection(for: correctedText, prompt: modifiedPrompt)
     }
     
     private func handleNotification(note: Notification) {
