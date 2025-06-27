@@ -22,9 +22,14 @@ struct SmartCorrectTests {
     }
 
     @Test func responsesAPICall() async throws {
-        let apiKey = #require(apiKey, "API key not set")
+        let apiKey = try #require(apiKey, "API key not set")
         #expect(!apiKey.isEmpty)
         
+        let req = ResponsesAPIRequest(model: .gpt35turbo, input: Constants.defaultMainPrompt + "\n\nTeh snappy innerface of macos 26 taheo is mahvelous to use and behold. Butt, the liqid glass isn't my cup of tea.")
         
+        let response: ResponsesAPIResponse = try await APIManager.shared.sendRequest(endpoint: .responses, params: req, authToken: "Bearer \(apiKey)")
+        
+        let outputText = try #require(response.outputText)
+        #expect(!outputText.isEmpty)
     }
 }

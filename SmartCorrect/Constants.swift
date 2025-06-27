@@ -14,6 +14,8 @@ enum WindowIdentifier : String {
 }
 
 enum Constants {
+    
+    static let bundleIdentifier = "com.entopia.smartcorrect"
     static let defaultMainPrompt = "Improve and correct the following text in its original language. Focus on grammar, spelling, clarity, and style, while preserving the original tone and intent. Return only the corrected version."
     
     static let defaultSecondaryPrompt = """
@@ -30,4 +32,6 @@ enum Constants {
     
     static let encoder = JSONEncoder()
     static let decoder = JSONDecoder()
+    
+    static let dateFormatter = DateFormatter()
 }

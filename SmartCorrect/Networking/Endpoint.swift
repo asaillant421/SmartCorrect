@@ -8,34 +8,22 @@
 import Foundation
 
 enum Endpoint {
-    case createSession
-    case refreshToken
-    case createAccount
-    case fetchAccountDetails
-    case fetchLatestVersion
-    case download(URL)
+    case responses
+    case chatCompletion
     
     var path: String {
         switch self {
-        case .createSession, .refreshToken:
-            return "session"
-        case .createAccount, .fetchAccountDetails:
-            return "account"
-        case .fetchLatestVersion:
-            return "version.json"
-        case let .download(custom):
-            return custom.path
+        case .responses:
+            return "responses"
+        case .chatCompletion:
+            return "chat/completion"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .createAccount, .createSession:
+        case .responses, .chatCompletion:
             return .post
-        case .fetchAccountDetails, .fetchLatestVersion, .download:
-            return .get
-        case .refreshToken:
-            return .put
         }
     }
     
@@ -44,11 +32,6 @@ enum Endpoint {
     }
     
     var url: URL? {
-        switch self {
-        case let .download(custom):
-            return custom
-        default:
-            return URL(string: host.url)?.appendingPathComponent(path)
-        }
+        URL(string: host.url)?.appendingPathComponent(path)
     }
 }

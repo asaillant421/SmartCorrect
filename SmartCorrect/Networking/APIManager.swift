@@ -8,10 +8,10 @@
 import Foundation
 import os.log
 
-class APIManager {
+actor APIManager {
     static let shared = APIManager()
     
-    private let log = OSLog(subsystem: Constants.apiBundleIdentifier, category: "api")
+    private let log = OSLog(subsystem: Constants.bundleIdentifier, category: "api")
     
     private let debuggingDelegate = DebuggingDelegate()
     
@@ -32,12 +32,12 @@ class APIManager {
     
     private func createQueryParamRequest<P: Encodable>(url: URL, params: P) throws -> URLRequest {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
-            throw APIError.badURL(url.absoluteString)
+            throw APIError(message: "Bad URL", type: "badURL", param: url.absoluteString, code: nil)
         }
         
         let d = try params.encodeJSON()
         guard let paramDict = try JSONSerialization.jsonObject(with: d) as? [String:Any] else {
-            throw APIError.encodingError(params)
+            throw APIError(message: "Couldn't do JSON serialization of JSON string", type: "encodingError", param: d.s, code: nil)
         }
         
         // TODO: Improve upon this for more complicated Encodable objects if query params are necessary
@@ -74,7 +74,7 @@ class APIManager {
     
     private func createRequest<P: Encodable>(endpoint: Endpoint, params: P?, authToken: String? = nil) throws -> URLRequest {
         guard let u = endpoint.url else {
-            throw APIError.badURL("\(HostManager.shared.selectedHost.url)/\(endpoint.path)")
+            throw APIError(message: "Bad URL", type: "badURL", param: "\(HostManager.shared.selectedHost.url)/\(endpoint.path)", code: nil)
         }
         
         var request: URLRequest
@@ -104,10 +104,6 @@ class APIManager {
         return try await sendRequest(endpoint: endpoint, params: dummyParam, authToken: authToken)
     }
     
-    func download(fromURL url: URL, authToken: String? = nil) async throws -> URL {
-        return try await download(fromEndpoint: .download(url), authToken: authToken)
-    }
-    
     func download(fromEndpoint endpoint: Endpoint, authToken: String? = nil) async throws -> URL {
         let req = try createRequest(endpoint: endpoint, authToken: authToken)
         
@@ -127,11 +123,11 @@ class APIManager {
         
         os_log(.debug, log: log, "FLUFFERNUTTER Response = %{public}@, Body: %{public}@", response.betterDescription, data.s)
         
-        let parsedData = try Constants.decoder.decode(ResponseResult<R>.self, from: data)
+        let wrapped = try Constants.decoder.decode(ResponseWrapper<R>.self, from: data)
         
-        switch parsedData {
-        case let .success(goodness):
-            return goodness
+        switch wrapped {
+        case let .success(validResponse):
+            return validResponse
         case let .failure(err):
             throw err
         }

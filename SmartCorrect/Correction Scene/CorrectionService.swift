@@ -18,9 +18,20 @@ actor CorrectionService {
     }
     
     func fetchCorrection(for text: String, prompt: String = Constants.defaultMainPrompt, additionalInstructions: String? = nil) async throws -> String {
-        return await Task {
-            return String(text.reversed())
-        }.value
+        
+        let paramsForChatGPT: String
+        
+        if let additionalInstructions {
+            paramsForChatGPT = [prompt, text, additionalInstructions].joined(separator: "\n\n")
+        } else {
+            paramsForChatGPT = [prompt, text].joined(separator: "\n\n")
+        }
+        
+        let request = ResponsesAPIRequest(model: model, input: paramsForChatGPT)
+        
+        let response: ResponsesAPIResponse = try await APIManager.shared.sendRequest(endpoint: .responses, params: request, authToken: "Bearer \(apiKey)")
+        
+        return response.outputText ?? text
     }
     
 
