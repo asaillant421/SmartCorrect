@@ -6,23 +6,31 @@
 //  Copyright © 2025 Entopia Investment Inc. All rights reserved.
 //
 
+import Foundation
+
 enum WindowIdentifier : String {
     case smartCorrect = "smart-correct-window"
     case settingsWindow = "settings-window"
 }
 
 enum Constants {
+    
+    static let bundleIdentifier = "com.entopia.smartcorrect"
     static let defaultMainPrompt = "Improve and correct the following text in its original language. Focus on grammar, spelling, clarity, and style, while preserving the original tone and intent. Return only the corrected version."
     
+    static let defaultSecondaryPromptPlaceholder = "[CORRECTED_TEXT]"
+    static let defaultSecondaryPromptInstructionPlaceholder = "[USER_COMMANDS]"
     static let defaultSecondaryPrompt = """
-    You are given a corrected version of a text. Preserve its structure and quality, but apply light edits based on the following instructions.
-    
-    Text:
-    [CORRECTED_TEXT]
+    Below are additional instructions and a corrected version of a text. Preserve the text's structure and quality, but apply light edits based on the additional instructions to refine the text. Reply only with the refined text.
     
     Instructions:
     [USER_COMMANDS]
     
-    Only return the revised text with the changes applied.
+    Text:
     """
+    
+    static let encoder = JSONEncoder()
+    static let decoder = JSONDecoder()
+    
+    static let dateFormatter = DateFormatter()
 }

@@ -11,26 +11,15 @@ import SwiftUI
 struct CorrectionView : View {
     @Environment(\.openSettings) private var openSettings
     @Environment(CorrectionViewModel.self) var viewModel
-//    
-//    init() {
-//        
-//    }
-//    
+    @Environment(\.modelContext) var modelContext
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Improve Writing", systemImage: "sparkles")
             
             CorrectionEditorView(viewModel: viewModel)
             
-            HStack {
-                Button("Make more formal") {
-                    // TODO
-                }
-                
-                Button("Use more humor") {
-                    // TODO
-                }
-            }
+            ExtraPromptButtonsView(viewModel: viewModel)
             
             CorrectionButtonFooterView(viewModel: viewModel)
         }

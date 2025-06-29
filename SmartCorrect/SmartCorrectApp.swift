@@ -18,21 +18,8 @@ struct SmartCorrectApp: App {
     @State private var viewModel: CorrectionViewModel?
     @State private var shouldShowMainWindow = false
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-    
     var body: some Scene {
-        Window(Text("Flumpy"), id: WindowIdentifier.smartCorrect.rawValue) {
+        Window(Text("SmartCorrect"), id: WindowIdentifier.smartCorrect.rawValue) {
             Group {
                 if let viewModel {
                     CorrectionView()
@@ -50,9 +37,9 @@ struct SmartCorrectApp: App {
                 }
             }
         }
+        .modelContainer(promptContainer)
         .windowManagerRole(.principal)
         .windowLevel(.normal)
-        //.windowStyle(.plain)
         .restorationBehavior(.automatic)
         
         
@@ -68,6 +55,7 @@ struct SmartCorrectApp: App {
                     maxHeight: 800
                 )
         }
+        .modelContainer(promptContainer)
         .windowResizability(.contentSize)
         
         MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {

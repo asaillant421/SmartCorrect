@@ -10,16 +10,29 @@ import SwiftUI
 
 actor CorrectionService {
     private let apiKey: String
+    private let model: GPTModel
     
-    init(apiKey: String) {
+    init(apiKey: String, model: GPTModel = .gpt35turbo) {
         self.apiKey = apiKey
+        self.model = model
     }
     
-    func fetchCorrection(for text: String, prompt: String = Constants.defaultMainPrompt, additionalInstructions: String? = nil) async throws -> String {
-        return await Task {
-            return String(text.reversed())
-        }.value
+    func fetchCorrection(for text: String, prompt: String = Constants.defaultMainPrompt) async throws -> String {
+        
+        let paramsForChatGPT = [prompt, text].joined(separator: "\n\n")
+        
+        let request = ResponsesAPIRequest(model: model, input: paramsForChatGPT)
+        
+        let response: ResponsesAPIResponse = try await APIManager.shared.sendRequest(endpoint: .responses, params: request, authToken: "Bearer \(apiKey)")
+        
+        guard let output = response.output.first,
+              let content = output.content.first,
+              let outputText = content.text else {
+            throw APIError(message: "Response had no valid text content", type: "invalid_response", param: response.id, code: "invalid_response")
+        }
+        
+        return outputText
     }
     
-
+    
 }
