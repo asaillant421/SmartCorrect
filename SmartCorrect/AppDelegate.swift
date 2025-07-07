@@ -21,7 +21,5 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     private func openCorrectionWindow(text: String) {
         let notification = Notification(name: Notification.serviceActivated, object: nil, userInfo: [Notification.selectedTextKey:text])
         NotificationCenter.default.post(notification)
-        
-        NSApplication.shared.activate(windowIdentifier: .smartCorrect, sender: self)
     }
 }

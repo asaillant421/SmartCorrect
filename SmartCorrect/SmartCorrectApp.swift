@@ -16,7 +16,7 @@ struct SmartCorrectApp: App {
     @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
     @State private var viewModel: CorrectionViewModel?
-    @State private var shouldShowMainWindow = false
+    private var cancellables: Set<AnyCancellable> = []
     
     var body: some Scene {
         Window(Text("SmartCorrect"), id: WindowIdentifier.smartCorrect.rawValue) {
@@ -31,20 +31,17 @@ struct SmartCorrectApp: App {
             .onAppear {
                 if nil == viewModel, let apiKey, !apiKey.isEmpty {
                     viewModel = CorrectionViewModel(apiKey: apiKey)
-                    //                } else {
-                    //                    // Bring up settings for API key instead
-                    //                    solicitAPIKey()
+                } else {
+                    // Bring up settings for API key instead
+                    openSettings()
                 }
             }
         }
+        .windowStyle(.hiddenTitleBar)
         .modelContainer(promptContainer)
         .windowManagerRole(.principal)
         .windowLevel(.normal)
         .restorationBehavior(.automatic)
-        
-        
-        //.defaultLaunchBehavior(.suppressed)
-        //.handlesExternalEvents(matching: ["*"])
         
         Settings {
             SettingsView()
@@ -59,7 +56,7 @@ struct SmartCorrectApp: App {
         .windowResizability(.contentSize)
         
         MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {
-            Button("Improve Text") {
+            Button("Open SmartCorrect") {
                 openMainWindow()
             }
             Divider()
@@ -77,34 +74,22 @@ struct SmartCorrectApp: App {
         }
     }
     
-    private func openMainWindow() {
+    init() {
+        let cancellable = NotificationCenter.default.publisher(for: Notification.serviceActivated)
+            .sink(receiveValue: handleNotification(note:))
+        
+        cancellables.insert(cancellable)
+    }
+    
+    func openMainWindow() {
         openWindow(id: WindowIdentifier.smartCorrect.rawValue)
         
         NSApplication.shared.activate(windowIdentifier: .smartCorrect)
     }
 
-        //
-        //        Window(Text("Flumpy"), id: WindowIdentifier.smartCorrect.rawValue) {
-        //            Group {
-        //                if let viewModel {
-        //                    CorrectionView()
-        //                        .environment(viewModel)
-        //                } else {
-        //                    EmptyView()
-        //                }
-        //            }
-        //            .onAppear {
-        //                if nil == viewModel, let apiKey, !apiKey.isEmpty {
-        //                    viewModel = CorrectionViewModel(apiKey: apiKey)
-        ////                } else {
-        ////                    // Bring up settings for API key instead
-        ////                    solicitAPIKey()
-        //                }
-        //            }
-        //            .onDisappear {
-        //                viewModel = nil
-        //            }
-        //        }
-        //        .modelContainer(sharedModelContainer)
+    private func handleNotification(note: Notification) {
+        guard Notification.serviceActivated == note.name else { return }
         
+        openMainWindow()
+    }
 }

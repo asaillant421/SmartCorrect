@@ -15,13 +15,15 @@ struct ExtraPromptButtonsView : View {
     
     var body: some View {
         ScrollView(.horizontal) {
-            ForEach(prompts) { prompt in
-                Button(prompt.name) {
-                    Task.detached(priority: .background) {
-                        do {
-                            try await self.viewModel.improveCorrection(withModifications: prompt.text)
-                        } catch {
-                            // TODO
+            HStack {
+                ForEach(prompts) { prompt in
+                    Button(prompt.name) {
+                        Task.detached(priority: .background) {
+                            do {
+                                try await self.viewModel.improveCorrection(withModifications: prompt.text)
+                            } catch {
+                                // TODO
+                            }
                         }
                     }
                 }

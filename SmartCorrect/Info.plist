@@ -3,14 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>LSUIElement</key>
-	<false/>
+	<true/>
 	<key>NSServices</key>
 	<array>
 		<dict>
 			<key>NSKeyEquivalent</key>
 			<dict>
 				<key>default</key>
-				<string>Z</string>
+				<string>I</string>
 			</dict>
 			<key>NSMenuItem</key>
 			<dict>
@@ -35,5 +35,11 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>SmartCorrect needs access to integrate with ChatGPT.</string>
+	<key>NSSupportsAutomaticTermination</key>
+	<false/>
+	<key>NSSupportsSuddenTermination</key>
+	<false/>
 </dict>
 </plist>
