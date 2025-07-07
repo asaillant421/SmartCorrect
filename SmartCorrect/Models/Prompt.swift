@@ -15,10 +15,16 @@ final class Prompt {
     var text: String
     var shortcut: String
     var name: String
+    var shouldShowButton: Bool
     
-    init(text: String = "", shortcut: String = "", name: String = "") {
+    static let shouldShow: Predicate<Prompt> = #Predicate { prompt in
+        prompt.shouldShowButton
+    }
+    
+    init(text: String = "", shortcut: String = "", name: String = "", shouldShowButton: Bool = true) {
         self.text = text
         self.shortcut = shortcut
         self.name = name
+        self.shouldShowButton = shouldShowButton
     }
 }

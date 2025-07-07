@@ -29,9 +29,9 @@ let promptContainer: ModelContainer = {
         
         // Fill in the default data
         
-        let mainPrompt = Prompt(text: Constants.defaultMainPrompt, name: String(localized: "Main Prompt"))
+        let mainPrompt = Prompt(text: Constants.defaultMainPrompt, name: String(localized: "Main Prompt"), shouldShowButton: false)
         
-        let secondaryPrompt = Prompt(text: Constants.defaultSecondaryPrompt, name: String(localized: "Secondary Prompt"))
+        let secondaryPrompt = Prompt(text: Constants.defaultSecondaryPrompt, name: String(localized: "Secondary Prompt"), shouldShowButton: false)
         
         modelContainer.mainContext.insert(mainPrompt)
         modelContainer.mainContext.insert(secondaryPrompt)

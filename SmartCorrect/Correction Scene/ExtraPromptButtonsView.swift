@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct ExtraPromptButtonsView : View {
-    @Query var prompts: [Prompt]
+    @Query(filter: Prompt.shouldShow) var prompts: [Prompt]
     @Bindable var viewModel: CorrectionViewModel
     
     var body: some View {
