@@ -19,7 +19,9 @@ struct CorrectionButtonFooterView : View {
             Spacer()
             
             Button("Paste Correction") {
-                // TODO
+                Task.detached {
+                    await viewModel.pasteCorrection()
+                }
             }
             .disabled(viewModel.correctedText.isEmpty)
             

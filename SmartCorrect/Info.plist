@@ -36,7 +36,7 @@
 		</dict>
 	</array>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>SmartCorrect needs access to integrate with ChatGPT.</string>
+	<string>SmartCorrect needs access to paste results from ChatGPT.</string>
 	<key>NSSupportsAutomaticTermination</key>
 	<false/>
 	<key>NSSupportsSuddenTermination</key>

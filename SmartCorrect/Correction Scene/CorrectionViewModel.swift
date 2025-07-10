@@ -20,6 +20,7 @@ class CorrectionViewModel {
     
     private var cancellables: Set<AnyCancellable> = []
     private let service: CorrectionService
+    private let clipboardService = ClipboardService()
     
     init(apiKey: String) {
         self.apiKey = apiKey
@@ -30,12 +31,26 @@ class CorrectionViewModel {
         cancellables.insert(cancellable)
     }
     
+    func findSelectedText() async {
+        guard textForCorrection.isEmpty else { return }
+        
+        if let text = await clipboardService.findSelectedText() {
+            textForCorrection = text
+        }
+        
+    }
+    
     func correctText() async throws {
         if additionalInstructions.isEmpty {
             correctedText = try await service.fetchCorrection(for: textForCorrection)
         } else {
             try await improveCorrection(withModifications: additionalInstructions)
         }
+    }
+    
+    func pasteCorrection() async {
+        
+        await clipboardService.replaceSelectedText(with: correctedText)
     }
     
     func improveCorrection(withModifications extraInstructions: String? = nil) async throws {
@@ -57,4 +72,7 @@ class CorrectionViewModel {
             try await correctText()
         }
     }
+    
+    //
+    
 }

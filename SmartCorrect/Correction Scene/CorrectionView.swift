@@ -24,6 +24,11 @@ struct CorrectionView : View {
             CorrectionButtonFooterView(viewModel: viewModel)
         }
         .padding()
+        .onAppear {
+            Task.detached(priority: .background) {
+                await viewModel.findSelectedText()
+            }
+        }
     }
     
     private func solicitAPIKey() {
