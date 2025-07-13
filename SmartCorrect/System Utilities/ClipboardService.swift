@@ -10,11 +10,11 @@ import ApplicationServices
 import AppKit
 
 actor ClipboardService {
-//    static let shared = ClipboardService()
-//    
-//    private  init() {
-//        super.init()
-//    }
+    //    static let shared = ClipboardService()
+    //
+    //    private  init() {
+    //        super.init()
+    //    }
     
     func findSelectedText() async -> String? {
         if let text = await selectedTextViaAccessibility() {
@@ -45,19 +45,18 @@ actor ClipboardService {
             return
         }
         
-        // Find foremost application
+        let bundleID: String
+        do {
+            bundleID = try await findFrontmostBundleID()
+        } catch {
+            return
+        }
         
+        if await replaceSelectedTextViaAppleScript(with: newText, bundleID: bundleID) {
+            return
+        }
         
-        let pb = NSPasteboard.general
-        pb.clearContents()
-        pb.setString(newText, forType: .string)
-        //        NSPasteboard.general.setString(self.correctedText, forType: .string)
-        
-        //        pasteboard.clearContents()
-        //        pasteboard.setString(
-        //            String(string.reversed()),
-        //            forType: .string
-        //        )
+        await replaceSelectedTextViaSimulatedPaste(with: newText, bundleID: bundleID)
     }
     
     private func selectedTextViaAccessibility() async -> String? {
@@ -71,7 +70,7 @@ actor ClipboardService {
         guard result == .success, let selectedText = selectedTextValue as? String else {
             return nil
         }
-
+        
         return selectedText
     }
     
@@ -90,15 +89,59 @@ actor ClipboardService {
     }
     
     private func replaceSelectedTextViaAppleScript(with newText: String, bundleID: String) async -> Bool {
-        true
+        false
     }
     
     private func selectedTextViaSimulatedCopy(bundleID: String) async -> String? {
-        nil
+        guard let src = CGEventSource(stateID: .hidSystemState),
+              let cDown = CGEvent(keyboardEventSource: src, virtualKey: 0x08, keyDown: true),
+              let cUp = CGEvent(keyboardEventSource: src, virtualKey: 0x08, keyDown: false)
+        else { return nil }
+        
+         // 'c' key
+        cDown.flags = .maskCommand
+        cUp.flags = .maskCommand
+        
+        cDown.post(tap: .cghidEventTap)
+        cUp.post(tap: .cghidEventTap)
+        
+        // Small delay for clipboard to update
+        usleep(200_000)
+        
+        let pasteboard = NSPasteboard.general
+        guard let copiedText = pasteboard.string(forType: .string) else {
+            print("No text on clipboard.")
+            return nil
+        }
+        
+        return copiedText
     }
     
+    @discardableResult
     private func replaceSelectedTextViaSimulatedPaste(with newText: String, bundleID: String) async -> Bool {
-        true
+        guard let src = CGEventSource(stateID: .hidSystemState) else { return false }
+        
+        let pb = NSPasteboard.general
+        pb.clearContents()
+        pb.setString(newText, forType: .string)
+        
+        let vDown = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: true) // 'v'
+        vDown?.flags = .maskCommand
+        let vUp = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: false)
+        vUp?.flags = .maskCommand
+        
+        vDown?.post(tap: .cghidEventTap)
+        vUp?.post(tap: .cghidEventTap)
+        
+        return true
+        
+        //        NSPasteboard.general.setString(self.correctedText, forType: .string)
+        
+        //        pasteboard.clearContents()
+        //        pasteboard.setString(
+        //            String(string.reversed()),
+        //            forType: .string
+        //        )
     }
     
     private func findFrontmostBundleID() async throws -> String {
@@ -110,7 +153,7 @@ actor ClipboardService {
                                                    &focusedApp)
         
         let fallback: String =
-            NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? ""
+        NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? ""
         
         guard result == .success, let focusedApp else {
             // chrome or vscode will return AXError(-25212)
