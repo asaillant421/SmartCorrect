@@ -16,6 +16,7 @@ struct SmartCorrectApp: App {
     @Environment(\.openSettings) private var openSettings
     @Environment(\.openWindow) private var openWindow
     @State private var viewModel: CorrectionViewModel?
+    @State private var accessibilityPermitted = false
     private var cancellables: Set<AnyCancellable> = []
     
     var body: some Scene {
@@ -24,6 +25,7 @@ struct SmartCorrectApp: App {
                 if let viewModel {
                     CorrectionView()
                         .environment(viewModel)
+                        .checkAccessibility(interval: 3, access: $accessibilityPermitted)
                 } else {
                     EmptyView()
                 }
