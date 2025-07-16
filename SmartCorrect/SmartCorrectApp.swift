@@ -22,10 +22,12 @@ struct SmartCorrectApp: App {
     var body: some Scene {
         Window(Text("SmartCorrect"), id: WindowIdentifier.smartCorrect.rawValue) {
             Group {
-                if let viewModel {
+                if nil != viewModel {
                     CorrectionView()
-                        .environment(viewModel)
+                        .simultaneousGesture(WindowDragGesture())
                         .checkAccessibility(interval: 3, access: $accessibilityPermitted)
+                        .toolbarVisibility(.hidden, for: .windowToolbar)
+                        //.containerBackground(.clear, for: .window)
                 } else {
                     EmptyView()
                 }
@@ -39,10 +41,12 @@ struct SmartCorrectApp: App {
                 }
             }
         }
-        .windowStyle(.hiddenTitleBar)
+        .environment(viewModel)
+//        .windowStyle(.plain)
         .modelContainer(promptContainer)
         .windowManagerRole(.principal)
-        .windowLevel(.normal)
+        .windowLevel(.floating)
+//        .windowResizability(.contentSize)
         .restorationBehavior(.automatic)
         
         Settings {
