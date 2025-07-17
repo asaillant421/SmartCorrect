@@ -20,6 +20,10 @@ struct SmartCorrectApp: App {
     private var cancellables: Set<AnyCancellable> = []
     
     var body: some Scene {
+        WindowGroup {
+            DebugView()
+        }
+        
         Window(Text("SmartCorrect"), id: WindowIdentifier.smartCorrect.rawValue) {
             Group {
                 if nil != viewModel {
