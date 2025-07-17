@@ -22,8 +22,7 @@ extension NSApplication {
             return
         }
         
-        w.makeMain()
-        w.makeKeyAndOrderFront(sender)
+        w.orderFrontRegardless()
         activate(ignoringOtherApps: true)
     }
 }
