@@ -10,16 +10,19 @@ import AppKit
 import Combine
 import SwiftUI
 
+@main
 class AppDelegate : NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
-    private var observer: NSObjectProtocol?
+    private var overlayController: OverlayWindowController?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        NSApplication.shared.servicesProvider = SmartCorrectServiceProvider(openCorrectionWindow: openCorrectionWindow)
+        overlayController = OverlayWindowController {
+            ContentView()
+        }
+        
+        GlobalHotKeyManager.registerHotKey {
+            self.overlayController?.toggle()
+        }
     }
     
-    private func openCorrectionWindow(text: String) {
-        let notification = Notification(name: Notification.serviceActivated, object: nil, userInfo: [Notification.selectedTextKey:text])
-        NotificationCenter.default.post(notification)
-    }
 }
