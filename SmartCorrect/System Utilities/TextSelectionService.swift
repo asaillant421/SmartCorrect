@@ -1,5 +1,5 @@
 //
-//  ClipboardService.swift
+//  TextSelectionService.swift
 //  SmartCorrect
 //
 //  Created by מאיר רדנוביץ׳ on 07/07/2025.
@@ -9,13 +9,7 @@
 import ApplicationServices
 import AppKit
 
-actor ClipboardService {
-    //    static let shared = ClipboardService()
-    //
-    //    private  init() {
-    //        super.init()
-    //    }
-    
+actor TextSelectionService {
     func findSelectedText() async -> String? {
         if let text = await selectedTextViaAccessibility() {
             return text
@@ -75,11 +69,15 @@ actor ClipboardService {
     }
     
     private func replaceSelectedTextViaAccessibility(with newText: String) async -> Bool {
+        print("Replacing via Accessibility: \(newText)")
         guard let axFocusedElement = findFocusedAXUIElement() else {
+            print("Nothing focused in replaceSelectedTextViaAccessibility")
             return false
         }
         
         let result = AXUIElementSetAttributeValue(axFocusedElement, kAXSelectedTextAttribute as CFString, newText as CFTypeRef)
+        
+        print("Accessibility replacement result: \(result)")
         
         return .success == result
     }
