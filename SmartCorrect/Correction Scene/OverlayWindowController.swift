@@ -33,7 +33,7 @@ class OverlayWindowController: NSWindowController {
             if window.isVisible {
                 window.orderOut(nil)
             } else {
-                if let screen = NSScreen.main {
+                if window.frame.origin == CGPoint.zero, let screen = NSScreen.main {
                     let frame = window.frame
                     let x = screen.frame.midX - frame.width / 2
                     let y = screen.frame.midY - frame.height / 2
