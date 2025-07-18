@@ -10,7 +10,6 @@ import AppKit
 import Combine
 import SwiftUI
 
-@main
 class AppDelegate : NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
     private var overlayController: OverlayWindowController?
@@ -24,5 +23,6 @@ class AppDelegate : NSObject, NSApplicationDelegate {
             self.overlayController?.toggle()
         }
     }
+    
     
 }

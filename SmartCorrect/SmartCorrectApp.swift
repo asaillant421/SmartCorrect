@@ -4,11 +4,12 @@
 //
 //  Created by מאיר רדנוביץ׳ on 08/06/2025.
 //
-//
+
 //import SwiftUI
 //import SwiftData
 //import Combine
 //
+//@main
 //struct SmartCorrectApp: App {
 //    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 //    @AppSecureStorage("apiKey") private var apiKey: String?
@@ -19,30 +20,6 @@
 //    private var cancellables: Set<AnyCancellable> = []
 //    
 //    var body: some Scene {
-//        Window(Text("SmartCorrect"), id: WindowIdentifier.smartCorrect.id) {
-//            Group {
-//                if nil != viewModel {
-//                    CorrectionView()
-//                        .simultaneousGesture(WindowDragGesture())
-//                    
-//                        .checkAccessibility(interval: 3, access: $accessibilityPermitted)
-//                } else {
-//                    EmptyView()
-//                }
-//            }
-//            .onAppear {
-//                if nil == viewModel, let apiKey, !apiKey.isEmpty {
-//                    viewModel = CorrectionViewModel(apiKey: apiKey)
-//                } else {
-//                    // Bring up settings for API key instead
-//                    openSettings()
-//                }
-//            }
-//        }
-//        .environment(viewModel)
-//        .modelContainer(promptContainer)
-//        .windowLevel(.floating)
-//    
 //        
 //        Settings {
 //            SettingsView()
@@ -58,7 +35,7 @@
 //        
 //        MenuBarExtra("SmartCorrect", systemImage: "wand.and.rays") {
 //            Button("Open SmartCorrect") {
-//                openMainWindow()
+//                //openMainWindow()
 //            }
 //            Divider()
 //            Button("About") {
@@ -75,12 +52,12 @@
 //        }
 //    }
 //    
-//    init() {
-//        let cancellable = NotificationCenter.default.publisher(for: Notification.serviceActivated)
-//            .sink(receiveValue: handleNotification(note:))
-//        
-//        cancellables.insert(cancellable)
-//    }
+////    init() {
+////        let cancellable = NotificationCenter.default.publisher(for: Notification.serviceActivated)
+////            .sink(receiveValue: handleNotification(note:))
+////        
+////        cancellables.insert(cancellable)
+////    }
 ////    
 ////    func openMainWindow() {
 ////        openWindow(id: WindowIdentifier.smartCorrect.rawValue)

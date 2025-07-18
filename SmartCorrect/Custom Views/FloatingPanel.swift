@@ -33,7 +33,7 @@ class FloatingPanel: NSPanel {
         
         hasShadow = true
         hidesOnDeactivate = true
-        collectionBehavior = [.canJoinAllSpaces, .transient, .moveToActiveSpace] // .fullScreenAuxiliary
+        collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         ignoresMouseEvents = false
         title = ""
         isReleasedWhenClosed = false
