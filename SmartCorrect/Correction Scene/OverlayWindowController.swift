@@ -4,6 +4,7 @@ import Combine
 
 class OverlayWindowController: NSWindowController {
     private var cancellables: Set<AnyCancellable> = []
+    private var globalMouseMonitor: Any?
     
     init(@ViewBuilder content: () -> some View) {
         let hosting = NSHostingView(rootView: content())
@@ -27,25 +28,69 @@ class OverlayWindowController: NSWindowController {
     
     deinit {
         cancellables.removeAll()
+        stopMouseMonitoring()
     }
 
     func toggle() {
         if let window = self.window {
             if window.isVisible {
-                window.orderOut(nil)
+                hide()
             } else {
-                if window.frame.origin == CGPoint.zero, let screen = NSScreen.main {
-                    let frame = window.frame
-                    let x = screen.frame.midX - frame.width / 2
-                    let y = screen.frame.midY - frame.height / 2
-                    window.setFrameOrigin(NSPoint(x: x, y: y))
-                }
-                window.orderFrontRegardless()
+                show()
             }
         }
+    }
+    
+    private func show() {
+        guard let window = self.window else { return }
+        
+        if window.frame.origin == CGPoint.zero, let screen = NSScreen.main {
+            let frame = window.frame
+            let x = screen.frame.midX - frame.width / 2
+            let y = screen.frame.midY - frame.height / 2
+            window.setFrameOrigin(NSPoint(x: x, y: y))
+        }
+        
+        window.orderFrontRegardless()
+        startMouseMonitoring()
+    }
+    
+    private func hide() {
+        stopMouseMonitoring()
+        window?.orderOut(nil)
     }
 
     @objc func closeOnFocusLoss() {
         self.window?.orderOut(nil)
+    }
+    
+    private func startMouseMonitoring() {
+        guard globalMouseMonitor == nil else { return }
+        
+        globalMouseMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown]) { [weak self] event in
+            self?.handleGlobalMouseClick(event)
+        }
+    }
+    
+    private func stopMouseMonitoring() {
+        if let monitor = globalMouseMonitor {
+            NSEvent.removeMonitor(monitor)
+            globalMouseMonitor = nil
+        }
+    }
+    
+    private func handleGlobalMouseClick(_ event: NSEvent) {
+        guard let window = self.window, window.isVisible else { return }
+        
+        let clickLocation = event.locationInWindow
+        let globalClickLocation = NSEvent.mouseLocation
+        let windowFrame = window.frame
+        
+        // Check if click is outside the window bounds
+        let isOutsideWindow = !windowFrame.contains(globalClickLocation)
+        
+        if isOutsideWindow {
+            hide()
+        }
     }
 }
