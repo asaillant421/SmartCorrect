@@ -12,12 +12,13 @@ class OverlayWindowController: NSWindowController {
 
         super.init(window: panel)
 
-        let cancellable = NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)
-            .sink { _ in
-                self.closeOnFocusLoss()
-            }
-        
-        cancellables.insert(cancellable)
+        // Commented out to prevent panel from closing when app loses focus
+        // let cancellable = NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)
+        //     .sink { _ in
+        //         self.closeOnFocusLoss()
+        //     }
+        // 
+        // cancellables.insert(cancellable)
     }
 
     required init?(coder: NSCoder) {
@@ -39,7 +40,6 @@ class OverlayWindowController: NSWindowController {
                     let y = screen.frame.midY - frame.height / 2
                     window.setFrameOrigin(NSPoint(x: x, y: y))
                 }
-                NSApp.activate(ignoringOtherApps: true)
                 window.orderFrontRegardless()
             }
         }

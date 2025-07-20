@@ -10,10 +10,10 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-//    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @AppSecureStorage("apiKey") private var apiKey: String?
 //    @Environment(\.openSettings) private var openSettings
 //    @Environment(\.openWindow) private var openWindow
+//    @Environment(\.dismiss) private var dismiss
     @State private var viewModel: CorrectionViewModel?
     @State private var accessibilityPermitted = false
     private var cancellables: Set<AnyCancellable> = []

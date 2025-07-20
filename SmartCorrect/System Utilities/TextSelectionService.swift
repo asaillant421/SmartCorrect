@@ -12,12 +12,14 @@ import AppKit
 actor TextSelectionService {
     func findSelectedText() async -> String? {
         if let text = await selectedTextViaAccessibility() {
+            print("Found \(text) via Accessibility")
             return text
         }
         
         let bundleID: String
         do {
             bundleID = try await findFrontmostBundleID()
+            print("Found frontmost app has bundle ID: \(bundleID)")
         } catch {
             return nil
         }
@@ -150,22 +152,35 @@ actor TextSelectionService {
                                                    kAXFocusedApplicationAttribute as CFString,
                                                    &focusedApp)
         
-        let fallback: String =
-        NSWorkspace.shared.frontmostApplication?.bundleIdentifier ?? ""
+        let smartCorrectBundleID = Bundle.main.bundleIdentifier
+        
+        let getFallbackBundleID = {
+            let allApps = NSWorkspace.shared.runningApplications
+                .filter { $0.activationPolicy == .regular }
+                .filter { $0.bundleIdentifier != smartCorrectBundleID }
+                .sorted { $0.launchDate ?? Date.distantPast > $1.launchDate ?? Date.distantPast }
+            
+            return allApps.first?.bundleIdentifier ?? ""
+        }
         
         guard result == .success, let focusedApp else {
-            // chrome or vscode will return AXError(-25212)
-            return fallback
+            return getFallbackBundleID()
         }
         
         let axFocusedApp = focusedApp as! AXUIElement
         
         guard let focusedPid = axFocusedApp.findPid() else {
-            return fallback
+            return getFallbackBundleID()
         }
         
         let runningApp = NSRunningApplication(processIdentifier: focusedPid)
-        return runningApp?.bundleIdentifier ?? ""
+        let bundleID = runningApp?.bundleIdentifier ?? ""
+        
+        if bundleID == smartCorrectBundleID {
+            return getFallbackBundleID()
+        }
+        
+        return bundleID
     }
     
     private func findFocusedAXUIElement() -> AXUIElement? {

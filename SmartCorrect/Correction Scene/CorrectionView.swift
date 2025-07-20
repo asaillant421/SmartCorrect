@@ -7,11 +7,13 @@
 //
 
 import SwiftUI
+import Combine
 
 struct CorrectionView : View {
     @Environment(\.openSettings) private var openSettings
     @Environment(CorrectionViewModel.self) var viewModel
     @Environment(\.modelContext) var modelContext
+    private var cancellables: Set<AnyCancellable> = []
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -24,9 +26,22 @@ struct CorrectionView : View {
             CorrectionButtonFooterView(viewModel: viewModel)
         }
         .padding()
+        .frame(width: 800, height: 600)
         .onAppear {
-            Task.detached(priority: .background) {
-                await viewModel.findSelectedText()
+            CorrectionView.updateAndCorrect(vm: viewModel)
+        }
+    }
+    
+    init() {
+    }
+    
+    private static func updateAndCorrect(vm: CorrectionViewModel) {
+        
+        Task.detached(priority: .background) {
+            await vm.findSelectedText()
+            
+            if vm.correctedText.isEmpty {
+                try await vm.correctText()
             }
         }
     }

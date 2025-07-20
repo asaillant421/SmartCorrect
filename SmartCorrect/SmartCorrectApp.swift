@@ -53,7 +53,7 @@
 //    }
 //    
 ////    init() {
-////        let cancellable = NotificationCenter.default.publisher(for: Notification.serviceActivated)
+////        let cancellable = NotificationCenter.default.publisher(for: .serviceActivated)
 ////            .sink(receiveValue: handleNotification(note:))
 ////        
 ////        cancellables.insert(cancellable)
@@ -66,7 +66,7 @@
 ////    }
 ////
 ////    private func handleNotification(note: Notification) {
-////        guard Notification.serviceActivated == note.name else { return }
+////        guard .serviceActivated == note.name else { return }
 ////        
 ////        openMainWindow()
 ////    }
