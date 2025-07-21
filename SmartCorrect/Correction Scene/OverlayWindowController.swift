@@ -87,13 +87,10 @@ class OverlayWindowController: NSWindowController {
         guard let window = self.window, window.isVisible else { return }
         
         let clickLocation = event.locationInWindow
-        let globalClickLocation = NSEvent.mouseLocation
         let windowFrame = window.frame
         
         // Check if click is outside the window bounds
-        let isOutsideWindow = !windowFrame.contains(globalClickLocation)
-        
-        if isOutsideWindow {
+        if !windowFrame.contains(clickLocation) {
             hide()
         }
     }
