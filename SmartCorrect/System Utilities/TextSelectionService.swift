@@ -131,15 +131,17 @@ actor TextSelectionService {
             """
             
         case "com.apple.Notes":
-            script = """
-                tell application "Notes"
-                    tell front window
-                        set selection to "\(escapedText)"
-                    end tell
-                    return true
-                end tell
-                return false
-            """
+            // Notes can't modify the selection via AppleScript
+            return false
+//            script = """
+//                tell application "Notes"
+//                    tell first note of selection
+//                        set text of body to "\(escapedText)"
+//                    end tell
+//                    return true
+//                end tell
+//                return false
+//            """
             
         case "com.apple.mail":
             script = """
@@ -178,11 +180,10 @@ actor TextSelectionService {
                 let appleScript = NSAppleScript(source: script)
                 let result = appleScript?.executeAndReturnError(&error)
                 
-                if let error = error {
+                if let error {
                     print("AppleScript error: \(error)")
                     continuation.resume(returning: false)
                 } else if let result {
-                    // Try to get boolean result, default to true if script executed without error
                     let success = result.booleanValue
                     continuation.resume(returning: success)
                 } else {
@@ -219,29 +220,87 @@ actor TextSelectionService {
     
     @discardableResult
     private func replaceSelectedTextViaSimulatedPaste(with newText: String, bundleID: String) async -> Bool {
-        guard let src = CGEventSource(stateID: .hidSystemState) else { return false }
+        print("replaceSelectedTextViaSimulatedPaste:\(newText) into:\(bundleID)")
         
-        let pb = NSPasteboard.general
-        pb.clearContents()
-        pb.setString(newText, forType: .string)
-        
-        let vDown = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: true) // 'v'
-        vDown?.flags = .maskCommand
-        let vUp = CGEvent(keyboardEventSource: src, virtualKey: 0x09, keyDown: false)
-        vUp?.flags = .maskCommand
-        
-        vDown?.post(tap: .cghidEventTap)
-        vUp?.post(tap: .cghidEventTap)
-        
-        return true
-        
-        //        NSPasteboard.general.setString(self.correctedText, forType: .string)
-        
-        //        pasteboard.clearContents()
-        //        pasteboard.setString(
-        //            String(string.reversed()),
-        //            forType: .string
-        //        )
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                // Save current clipboard content
+                let originalClipboard = NSPasteboard.general.string(forType: .string)
+                
+                // Set new text to clipboard
+                let pasteboard = NSPasteboard.general
+                pasteboard.clearContents()
+                guard pasteboard.setString(newText, forType: .string) else {
+                    print("Failed to set clipboard content")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                // Small delay to ensure clipboard is updated
+                usleep(50_000) // 50ms
+                
+                // Verify clipboard was set correctly
+                guard pasteboard.string(forType: .string) == newText else {
+                    print("Clipboard content doesn't match expected text")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                // Create event source
+                guard let eventSource = CGEventSource(stateID: .hidSystemState) else {
+                    print("Failed to create event source")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                // Find the target app's process ID for targeting events
+                var targetPid: pid_t = 0
+                if let runningApp = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID }) {
+                    targetPid = runningApp.processIdentifier
+                }
+                
+                // Create Cmd+V key events
+                guard let vKeyDown = CGEvent(keyboardEventSource: eventSource, virtualKey: 0x09, keyDown: true),
+                      let vKeyUp = CGEvent(keyboardEventSource: eventSource, virtualKey: 0x09, keyDown: false) else {
+                    print("Failed to create keyboard events")
+                    continuation.resume(returning: false)
+                    return
+                }
+                
+                // Set Command modifier
+                vKeyDown.flags = .maskCommand
+                vKeyUp.flags = .maskCommand
+                
+                // Target specific application if we found its PID
+                if targetPid != 0 {
+                    vKeyDown.setIntegerValueField(.eventTargetUnixProcessID, value: Int64(targetPid))
+                    vKeyUp.setIntegerValueField(.eventTargetUnixProcessID, value: Int64(targetPid))
+                }
+                
+                // Post the events
+                let location = CGEventTapLocation.cghidEventTap
+                vKeyDown.post(tap: location)
+                
+                // Small delay between key down and up
+                usleep(10_000) // 10ms
+                
+                vKeyUp.post(tap: location)
+                
+                // Small delay to allow paste to complete
+                usleep(100_000) // 100ms
+                
+                // Restore original clipboard if it existed
+                if let originalClipboard {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        pasteboard.clearContents()
+                        pasteboard.setString(originalClipboard, forType: .string)
+                    }
+                }
+                
+                print("Simulated paste completed for bundleID: \(bundleID)")
+                continuation.resume(returning: true)
+            }
+        }
     }
     
     private func findFrontmostBundleID() async throws -> String {
