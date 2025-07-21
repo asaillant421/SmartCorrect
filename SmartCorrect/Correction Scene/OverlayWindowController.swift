@@ -5,6 +5,7 @@ import Combine
 class OverlayWindowController: NSWindowController {
     private var cancellables: Set<AnyCancellable> = []
     private var globalMouseMonitor: Any?
+    private var globalKeyMonitor: Any?
     
     init(@ViewBuilder content: () -> some View) {
         let hosting = NSHostingView(rootView: content())
@@ -29,6 +30,7 @@ class OverlayWindowController: NSWindowController {
     deinit {
         cancellables.removeAll()
         stopMouseMonitoring()
+        stopKeyMonitoring()
     }
 
     func toggle() {
@@ -53,10 +55,12 @@ class OverlayWindowController: NSWindowController {
         
         window.orderFrontRegardless()
         startMouseMonitoring()
+        startKeyMonitoring()
     }
     
     private func hide() {
         stopMouseMonitoring()
+        stopKeyMonitoring()
         window?.orderOut(nil)
     }
 
@@ -92,5 +96,29 @@ class OverlayWindowController: NSWindowController {
         if isOutsideWindow {
             hide()
         }
+    }
+    
+    private func startKeyMonitoring() {
+        guard globalKeyMonitor == nil else { return }
+        
+        globalKeyMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
+            self?.handleGlobalKeyDown(event)
+        }
+    }
+    
+    private func stopKeyMonitoring() {
+        if let monitor = globalKeyMonitor {
+            NSEvent.removeMonitor(monitor)
+            globalKeyMonitor = nil
+        }
+    }
+    
+    private func handleGlobalKeyDown(_ event: NSEvent) {
+        // Check if the pressed key is Escape (keyCode 53)
+        guard let window = self.window,
+                window.isVisible,
+                event.keyCode == 53 else { return }
+        
+        hide()
     }
 }
