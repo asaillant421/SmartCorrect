@@ -10,6 +10,9 @@ import ApplicationServices
 import AppKit
 
 actor TextSelectionService {
+    private var previousBundleID: String?
+    private var previousAXUIElement: AXUIElement?
+    
     func findSelectedText() async -> String? {
         if let text = await selectedTextViaAccessibility() {
             print("Found \(text) via Accessibility")
@@ -145,13 +148,6 @@ actor TextSelectionService {
     }
     
     private func findFrontmostBundleID() async throws -> String {
-        let systemWideElement = AXUIElementCreateSystemWide()
-        
-        var focusedApp: AnyObject?
-        let result = AXUIElementCopyAttributeValue(systemWideElement,
-                                                   kAXFocusedApplicationAttribute as CFString,
-                                                   &focusedApp)
-        
         let smartCorrectBundleID = Bundle.main.bundleIdentifier
         
         let getFallbackBundleID = {
@@ -160,16 +156,13 @@ actor TextSelectionService {
                 .filter { $0.bundleIdentifier != smartCorrectBundleID }
                 .sorted { $0.launchDate ?? Date.distantPast > $1.launchDate ?? Date.distantPast }
             
-            return allApps.first?.bundleIdentifier ?? ""
+            print("Falling back, previous is \(self.previousBundleID ?? "unknown")")
+            
+            return self.previousBundleID ?? allApps.first?.bundleIdentifier ?? ""
         }
         
-        guard result == .success, let focusedApp else {
-            return getFallbackBundleID()
-        }
-        
-        let axFocusedApp = focusedApp as! AXUIElement
-        
-        guard let focusedPid = axFocusedApp.findPid() else {
+        guard let axFocusedApp = findFocusedAXUIElement(),
+                let focusedPid = axFocusedApp.findPid() else {
             return getFallbackBundleID()
         }
         
@@ -179,6 +172,8 @@ actor TextSelectionService {
         if bundleID == smartCorrectBundleID {
             return getFallbackBundleID()
         }
+        
+        previousBundleID = bundleID
         
         return bundleID
     }
@@ -190,10 +185,12 @@ actor TextSelectionService {
         let result = AXUIElementCopyAttributeValue(systemWideElement, kAXFocusedApplicationAttribute as CFString, &focused)
         
         guard result == .success, let focused else {
-            return nil
+            return previousAXUIElement
         }
         
         let axFocusedElement = focused as! AXUIElement
+        
+        previousAXUIElement = axFocusedElement
         
         return axFocusedElement
     }
