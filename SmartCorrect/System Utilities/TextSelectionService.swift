@@ -92,7 +92,104 @@ actor TextSelectionService {
     }
     
     private func replaceSelectedTextViaAppleScript(with newText: String, bundleID: String) async -> Bool {
-        false
+        print("Attempting to replace text via AppleScript for bundleID: \(bundleID)")
+        
+        // Escape newText for AppleScript
+        let escapedText = newText.replacingOccurrences(of: "\"", with: "\\\"")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\r", with: "\\r")
+            .replacingOccurrences(of: "\t", with: "\\t")
+        
+        let script: String
+        
+        // Handle specific applications
+        switch bundleID {
+        case "com.microsoft.Word":
+            script = """
+                tell application "Microsoft Word"
+                    if (count of documents) > 0 then
+                        tell active document
+                            set content of text object of selection to "\(escapedText)"
+                        end tell
+                        return true
+                    end if
+                end tell
+                return false
+            """
+            
+        case "com.apple.TextEdit":
+            script = """
+                tell application "TextEdit"
+                    if (count of documents) > 0 then
+                        tell front document
+                            set text of selection to "\(escapedText)"
+                        end tell
+                        return true
+                    end if
+                end tell
+                return false
+            """
+            
+        case "com.apple.Notes":
+            script = """
+                tell application "Notes"
+                    tell front window
+                        set selection to "\(escapedText)"
+                    end tell
+                    return true
+                end tell
+                return false
+            """
+            
+        case "com.apple.mail":
+            script = """
+                tell application "Mail"
+                    tell front window
+                        set content of selection to "\(escapedText)"
+                    end tell
+                    return true
+                end tell
+                return false
+            """
+            
+        default:
+            // Generic AppleScript that works with many applications
+            script = """
+                tell application "System Events"
+                    tell (first application process whose bundle identifier is "\(bundleID)")
+                        if exists (first UI element whose focused is true) then
+                            set focused of (first UI element whose focused is true) to true
+                            keystroke "\(escapedText)"
+                            return true
+                        end if
+                    end tell
+                end tell
+                return false
+            """
+        }
+        
+        return await executeAppleScript(script)
+    }
+    
+    private func executeAppleScript(_ script: String) async -> Bool {
+        return await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                var error: NSDictionary?
+                let appleScript = NSAppleScript(source: script)
+                let result = appleScript?.executeAndReturnError(&error)
+                
+                if let error = error {
+                    print("AppleScript error: \(error)")
+                    continuation.resume(returning: false)
+                } else if let result {
+                    // Try to get boolean result, default to true if script executed without error
+                    let success = result.booleanValue
+                    continuation.resume(returning: success)
+                } else {
+                    continuation.resume(returning: false)
+                }
+            }
+        }
     }
     
     private func selectedTextViaSimulatedCopy(bundleID: String) async -> String? {
