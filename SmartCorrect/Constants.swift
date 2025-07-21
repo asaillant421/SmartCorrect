@@ -8,9 +8,11 @@
 
 import Foundation
 
-enum WindowIdentifier : String {
+enum WindowIdentifier : String, Codable, Identifiable {
     case smartCorrect = "smart-correct-window"
     case settingsWindow = "settings-window"
+    
+    var id: String { rawValue }
 }
 
 enum Constants {

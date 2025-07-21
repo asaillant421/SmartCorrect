@@ -15,10 +15,14 @@ extension NSApplication {
     
     func activate(windowIdentifier: WindowIdentifier, sender: NSObject? = nil) {
         
-        guard let w = window(withIdentifier: windowIdentifier) else { return }
+        guard let w = window(withIdentifier: windowIdentifier) else {
+            #if DEBUG
+            print("Could not find window with identifier \(windowIdentifier)")
+            #endif
+            return
+        }
         
-        w.makeMain()
-        w.makeKeyAndOrderFront(sender)
+        w.orderFrontRegardless()
         activate(ignoringOtherApps: true)
     }
 }

@@ -14,9 +14,9 @@ struct CorrectionEditorView : View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Original text")
-            TextEditor(text: $viewModel.textForCorrection)
+            TextEditor(text: .constant(viewModel.textForCorrection))
             Text("Suggested correction")
-            TextEditor(text: $viewModel.correctedText)
+            TextEditor(text: .constant(viewModel.correctedText))
             Text("Additional instructions")
             TextEditor(text: $viewModel.additionalInstructions)
         }
