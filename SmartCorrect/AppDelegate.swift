@@ -9,6 +9,7 @@
 import AppKit
 import Combine
 import SwiftUI
+import SwiftData
 
 class AppDelegate : NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
@@ -18,6 +19,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         overlayController = OverlayWindowController {
             ContentView()
+                .modelContainer(promptContainer)
         }
         
         GlobalHotKeyManager.registerHotKey {
@@ -73,6 +75,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
     @objc private func openSettings() {
         if settingsWindowController == nil {
             let settingsView = SettingsView()
+                .modelContainer(promptContainer)
             let hostingView = NSHostingView(rootView: settingsView)
             
             let window = NSWindow(

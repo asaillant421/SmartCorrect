@@ -37,7 +37,6 @@ struct ContentView: View {
             }
         //}
         .environment(viewModel)
-        .modelContainer(promptContainer)
         
 //        Settings {
 //            SettingsView()
