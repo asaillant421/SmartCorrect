@@ -29,8 +29,7 @@ class FloatingPanel: NSPanel {
         level = .floating
         isMovableByWindowBackground = true
         becomesKeyOnlyIfNeeded = true
-        backgroundColor = .systemYellow
-    
+        
         hasShadow = true
         hidesOnDeactivate = false
         collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
