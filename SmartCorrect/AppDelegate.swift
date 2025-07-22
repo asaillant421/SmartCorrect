@@ -72,7 +72,7 @@ class AppDelegate : NSObject, NSApplicationDelegate {
         NSApplication.shared.orderFrontStandardAboutPanel(nil)
     }
     
-    @objc private func openSettings() {
+    @MainActor @objc private func openSettings() {
         if settingsWindowController == nil {
             let settingsView = SettingsView()
                 .modelContainer(promptContainer)
