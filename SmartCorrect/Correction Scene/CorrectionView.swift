@@ -13,7 +13,7 @@ struct CorrectionView : View {
     @Environment(\.openSettings) private var openSettings
     @Environment(CorrectionViewModel.self) var viewModel
     @Environment(\.modelContext) var modelContext
-    private var cancellables: Set<AnyCancellable> = []
+    @State private var cancellables: Set<AnyCancellable> = []
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -28,11 +28,12 @@ struct CorrectionView : View {
         .padding()
         .frame(width: 800, height: 600)
         .onAppear {
+            setupNotifications()
             updateAndCorrect()
         }
     }
     
-    init() {
+    private func setupNotifications() {
         let cancellable = NotificationCenter.default
             .publisher(for: .serviceActivated)
             .sink(receiveValue: handleNotification(note:))
@@ -51,7 +52,7 @@ struct CorrectionView : View {
             await viewModel.findSelectedText()
             
             if await viewModel.correctedText.isEmpty {
-                try await viewModel.correctText(prompt: "TODO")
+                try await viewModel.correctText()
             }
         }
     }
@@ -68,7 +69,7 @@ struct CorrectionView : View {
         viewModel.textForCorrection = selectedText
         
         Task {
-            try await viewModel.correctText(prompt: "TODO")
+            try await viewModel.correctText()
         }
     }
     
