@@ -28,20 +28,30 @@ struct CorrectionView : View {
         .padding()
         .frame(width: 800, height: 600)
         .onAppear {
-            CorrectionView.updateAndCorrect(vm: viewModel)
+            updateAndCorrect()
         }
     }
     
     init() {
+        let cancellable = NotificationCenter.default
+            .publisher(for: .serviceActivated)
+            .sink(receiveValue: handleNotification(note:))
+        
+        let anotherCancellable = NotificationCenter.default
+            .publisher(for: .orderedFront)
+            .sink(receiveValue: handleOrderedFrontNotification(note:))
+        
+        cancellables.insert(cancellable)
+        cancellables.insert(anotherCancellable)
     }
     
-    private static func updateAndCorrect(vm: CorrectionViewModel) {
+    private func updateAndCorrect() {
         
         Task.detached(priority: .background) {
-            await vm.findSelectedText()
+            await viewModel.findSelectedText()
             
-            if vm.correctedText.isEmpty {
-                try await vm.correctText()
+            if await viewModel.correctedText.isEmpty {
+                try await viewModel.correctText(prompt: "TODO")
             }
         }
     }
@@ -49,4 +59,21 @@ struct CorrectionView : View {
     private func solicitAPIKey() {
         openSettings()
     }
+    
+    private func handleNotification(note: Notification) {
+        guard let selectedText = note.userInfo?[Notification.selectedTextKey] as? String else {
+            return
+        }
+        
+        viewModel.textForCorrection = selectedText
+        
+        Task {
+            try await viewModel.correctText(prompt: "TODO")
+        }
+    }
+    
+    private func handleOrderedFrontNotification(note: Notification) {
+        updateAndCorrect()
+    }
+
 }
