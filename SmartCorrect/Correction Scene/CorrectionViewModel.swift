@@ -34,13 +34,13 @@ class CorrectionViewModel {
         correctedText = ""
     }
     
-//    func correctText() async throws {
-//        if additionalInstructions.isEmpty {
-//            correctedText = try await service.fetchCorrection(for: textForCorrection)
-//        } else {
-//            try await improveCorrection(withModifications: additionalInstructions)
-//        }
-//    }
+    func correctText() async throws {
+        if additionalInstructions.isEmpty {
+            correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: Constants.defaultMainPrompt) // TODO
+        } else {
+            try await improveCorrection(withModifications: additionalInstructions)
+        }
+    }
     
     func correctText(prompt: String) async throws {
         correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: prompt)
