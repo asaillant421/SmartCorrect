@@ -10,8 +10,8 @@ import SwiftUI
 import SwiftData
 
 struct ShortcutsAndPromptsSettingsView : View {
-    @Query var prompts: [Prompt]
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Prompt.creationDate) var prompts: [Prompt]
     @State private var selection: PersistentIdentifier?
     
     var body: some View {

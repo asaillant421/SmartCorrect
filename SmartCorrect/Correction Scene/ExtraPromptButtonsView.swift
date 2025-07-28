@@ -10,7 +10,8 @@ import SwiftUI
 import SwiftData
 
 struct ExtraPromptButtonsView : View {
-    @Query(filter: Prompt.shouldShow) var prompts: [Prompt]
+    @Environment(\.modelContext) private var modelContext
+    @Query(filter: Prompt.shouldShow, sort: \.creationDate) var prompts: [Prompt]
     @Bindable var viewModel: CorrectionViewModel
     
     var body: some View {
@@ -20,7 +21,7 @@ struct ExtraPromptButtonsView : View {
                     Button(prompt.name) {
                         Task.detached(priority: .background) {
                             do {
-                                try await self.viewModel.improveCorrection(withModifications: prompt.text)
+                                try await self.viewModel.correctText(prompt: prompt.text)
                             } catch {
                                 // TODO
                             }

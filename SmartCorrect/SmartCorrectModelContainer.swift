@@ -7,6 +7,7 @@
 //
 
 import SwiftData
+import Foundation
 
 @MainActor
 let promptContainer: ModelContainer = {
@@ -29,12 +30,13 @@ let promptContainer: ModelContainer = {
         
         // Fill in the default data
         
-        let mainPrompt = Prompt(text: Constants.defaultMainPrompt, name: String(localized: "Main Prompt"), shouldShowButton: false)
-        
-        let secondaryPrompt = Prompt(text: Constants.defaultSecondaryPrompt, name: String(localized: "Secondary Prompt"), shouldShowButton: false)
-        
+        let mainPrompt = Prompt(text: Constants.defaultMainPrompt, name: String(localized: "Main Prompt"), shouldShowButton: false, creationDate: Date.distantPast)
+                
         modelContainer.mainContext.insert(mainPrompt)
-        modelContainer.mainContext.insert(secondaryPrompt)
+        
+        try modelContainer.mainContext.save()
+        
+        UserDefaults.standard.set(value: mainPrompt.id, for: .mainPromptId)
         
         return modelContainer
     } catch {
