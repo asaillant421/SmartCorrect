@@ -36,7 +36,7 @@ let promptContainer: ModelContainer = {
         
         try modelContainer.mainContext.save()
         
-        UserDefaults.standard.set(value: mainPrompt.id, for: .mainPromptId)
+        //UserDefaults.standard.set(value: mainPrompt.id, for: .mainPromptId)
         
         return modelContainer
     } catch {
