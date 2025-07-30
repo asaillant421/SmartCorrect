@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CorrectionButtonFooterView : View {
     @Bindable var viewModel: CorrectionViewModel
@@ -36,5 +37,9 @@ struct CorrectionButtonFooterView : View {
 }
 
 #Preview {
-    CorrectionButtonFooterView(viewModel: CorrectionViewModel(apiKey: "foop"))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Prompt.self, configurations: config)
+    let context = container.mainContext
+    
+    CorrectionButtonFooterView(viewModel: CorrectionViewModel(apiKey: "foop", modelContext: context))
 }

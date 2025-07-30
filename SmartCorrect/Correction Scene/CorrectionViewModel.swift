@@ -8,11 +8,13 @@
 
 import SwiftUI
 import Combine
+import SwiftData
 
 @Observable
 class CorrectionViewModel {
     var shouldSaveAdditionalInstructions = false
     private let apiKey: String
+    private var mainPrompt: Prompt?
     
     var textForCorrection = ""
     var correctedText = ""
@@ -21,9 +23,10 @@ class CorrectionViewModel {
     private let service: CorrectionService
     private let textService = TextSelectionService()
     
-    init(apiKey: String) {
+    init(apiKey: String, modelContext: ModelContext) {
         self.apiKey = apiKey
         service = CorrectionService(apiKey: apiKey)
+        fetchMainPrompt(from: modelContext)
     }
     
     func findSelectedText() async {
@@ -35,8 +38,9 @@ class CorrectionViewModel {
     }
     
     func correctText() async throws {
+        let promptText = mainPrompt?.text ?? Constants.defaultMainPrompt
         if additionalInstructions.isEmpty {
-            correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: Constants.defaultMainPrompt) // TODO
+            correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: promptText)
         } else {
             try await improveCorrection(withModifications: additionalInstructions)
         }
@@ -59,6 +63,19 @@ class CorrectionViewModel {
         correctedText = try await service.fetchCorrection(for: correctedText, prompt: extraInstructions ?? additionalInstructions)
     }
      
+    private func fetchMainPrompt(from context: ModelContext) {
+        var descriptor = FetchDescriptor<Prompt>()
+        descriptor.predicate = #Predicate<Prompt> { $0.shouldShowButton == false }
+        descriptor.fetchLimit = 1
+        
+        do {
+            mainPrompt = try context.fetch(descriptor).first
+        } catch {
+            print("Failed to fetch main prompt: \(error)")
+            mainPrompt = nil
+        }
+    }
+    
     //
     
 }
