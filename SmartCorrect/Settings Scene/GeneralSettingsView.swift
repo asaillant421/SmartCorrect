@@ -14,22 +14,36 @@ struct GeneralSettingsView : View {
     @AppSecureStorage("apiKey") private var apiKey: String?
     
     var body: some View {
-        Spacer()
         Form {
-            Toggle(isOn: $startAtLogin) {
-                Text("Start at Login")
-                Text("Automatically launch the app when you log in to your Mac. Enable this to keep the text correction assistant ready at all times without manual launch.")
-                    .lineLimit(3, reservesSpace: false)
+            Section {
+                Toggle("Start at Login", isOn: $startAtLogin)
+                Toggle("Show Icon on Menu Bar", isOn: $showMenuBarExtra)
+            } header: {
+                Text("General")
+            } footer: {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Start at Login: Automatically launch the app when you log in to your Mac.")
+                    Text("Show Icon on Menu Bar: Display the app's icon in the menu bar for quick access.")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
-            Toggle(isOn: $showMenuBarExtra) {
-                Text("Show Icon on Menu Bar")
-                Text("Display the app's icon in the menu bar for quick access to features and settings.")
-                    .lineLimit(3, reservesSpace: false)
+            
+            Section {
+                SecureField("OpenAI API Key", text: Binding(
+                    get: { apiKey ?? "" },
+                    set: { apiKey = $0.isEmpty ? nil : $0 }
+                ), prompt: Text("sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"))
+                .textFieldStyle(.roundedBorder)
+            } header: {
+                Text("API Configuration")
+            } footer: {
+                Text("Enter your OpenAI API key to enable text correction features. You can get one from openai.com.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
-            TextField("OpenAI API Key", text: $apiKey, prompt: Text("E.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"), axis: .vertical)
-                .lineLimit(3, reservesSpace: true)
-                
         }
-        Spacer()
+        .formStyle(.grouped)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
