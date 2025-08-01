@@ -8,12 +8,14 @@
 
 import SwiftUI
 import Combine
+import SwiftData
 
 struct ContentView: View {
     @AppSecureStorage("apiKey") private var apiKey: String?
 //    @Environment(\.openSettings) private var openSettings
 //    @Environment(\.openWindow) private var openWindow
 //    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @State private var viewModel: CorrectionViewModel?
     @State private var accessibilityPermitted = false
     private var cancellables: Set<AnyCancellable> = []
@@ -32,7 +34,7 @@ struct ContentView: View {
             }
             .onAppear {
                 if nil == viewModel, let apiKey, !apiKey.isEmpty {
-                    viewModel = CorrectionViewModel(apiKey: apiKey)
+                    viewModel = CorrectionViewModel(apiKey: apiKey, modelContext: modelContext)
                 }
             }
         //}

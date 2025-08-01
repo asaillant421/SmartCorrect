@@ -8,53 +8,46 @@
 
 import SwiftUI
 import Combine
+import SwiftData
 
 @Observable
 class CorrectionViewModel {
     var shouldSaveAdditionalInstructions = false
     private let apiKey: String
+    private var mainPrompt: Prompt?
     
     var textForCorrection = ""
     var correctedText = ""
     var additionalInstructions = ""
     
-    private var cancellables: Set<AnyCancellable> = []
     private let service: CorrectionService
     private let textService = TextSelectionService()
     
-    init(apiKey: String) {
+    init(apiKey: String, modelContext: ModelContext) {
         self.apiKey = apiKey
         service = CorrectionService(apiKey: apiKey)
-        let cancellable = NotificationCenter.default.publisher(for: .serviceActivated)
-            .sink(receiveValue: handleNotification(note:))
-        
-        let anotherCancellable = NotificationCenter.default
-            .publisher(for: .orderedFront)
-            .sink(receiveValue: handleOrderedFrontNotification(note:))
-        
-        cancellables.insert(cancellable)
-        cancellables.insert(anotherCancellable)
+        fetchMainPrompt(from: modelContext)
     }
     
     func findSelectedText() async {
-        if let text = await textService.findSelectedText() {
-//            if text != textForCorrection {
-                textForCorrection = text
-                correctedText = ""
-//            } else {
-                print("New text is \(text)")
-//            }
-        } else {
-            print("No selected text found")
-        }
+        guard let text = await textService.findSelectedText(), text != textForCorrection else { return }
+        
+        print("New text is \(text)")
+        textForCorrection = text
+        correctedText = ""
     }
     
     func correctText() async throws {
+        let promptText = mainPrompt?.text ?? Constants.defaultMainPrompt
         if additionalInstructions.isEmpty {
-            correctedText = try await service.fetchCorrection(for: textForCorrection)
+            correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: promptText)
         } else {
             try await improveCorrection(withModifications: additionalInstructions)
         }
+    }
+    
+    func correctText(prompt: String) async throws {
+        correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: prompt)
     }
     
     func pasteCorrection() async {
@@ -63,34 +56,24 @@ class CorrectionViewModel {
     }
     
     func improveCorrection(withModifications extraInstructions: String? = nil) async throws {
-        let additional = extraInstructions ?? additionalInstructions
+//        let additional = extraInstructions ?? additionalInstructions
+//        
+//        let modifiedPrompt = Constants.defaultSecondaryPrompt.replacingOccurrences(of: Constants.defaultSecondaryPromptInstructionPlaceholder, with: additional)
         
-        let modifiedPrompt = Constants.defaultSecondaryPrompt.replacingOccurrences(of: Constants.defaultSecondaryPromptInstructionPlaceholder, with: additional)
-        
-        correctedText = try await service.fetchCorrection(for: correctedText, prompt: modifiedPrompt)
+        correctedText = try await service.fetchCorrection(for: correctedText, prompt: extraInstructions ?? additionalInstructions)
     }
-    
-    private func handleNotification(note: Notification) {
-        guard let selectedText = note.userInfo?[Notification.selectedTextKey] as? String else {
-            return
-        }
+     
+    private func fetchMainPrompt(from context: ModelContext) {
+        var descriptor = FetchDescriptor<Prompt>()
+        descriptor.predicate = #Predicate<Prompt> { $0.shouldShowButton == false }
+        descriptor.fetchLimit = 1
         
-        self.textForCorrection = selectedText
-        
-        Task {
-            try await correctText()
+        do {
+            mainPrompt = try context.fetch(descriptor).first
+        } catch {
+            print("Failed to fetch main prompt: \(error)")
+            mainPrompt = nil
         }
-    }
-    
-    private func handleOrderedFrontNotification(note: Notification) {
-            Task.detached(priority: .background) { [weak self] in
-                
-                await self?.findSelectedText()
-                
-                if let welf = self, welf.correctedText.isEmpty {
-                    try await welf.correctText()
-                }
-            }
     }
     
     //

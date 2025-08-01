@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CorrectionEditorView : View {
     @Bindable var viewModel: CorrectionViewModel
@@ -28,5 +29,9 @@ struct CorrectionEditorView : View {
 }
 
 #Preview {
-    CorrectionEditorView(viewModel: CorrectionViewModel(apiKey: "foop"))
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: Prompt.self, configurations: config)
+    let context = container.mainContext
+    
+    CorrectionEditorView(viewModel: CorrectionViewModel(apiKey: "foop", modelContext: context))
 }
