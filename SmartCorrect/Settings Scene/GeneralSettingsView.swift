@@ -7,26 +7,40 @@
 //
 
 import SwiftUI
+import ServiceManagement
 
 struct GeneralSettingsView : View {
-    @AppStorage("startAtLogin") private var startAtLogin = false
+    @StateObject private var loginItemService = LoginItemService.shared
     @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
     @AppSecureStorage("apiKey") private var apiKey: String?
+    @State private var startAtLogin = false
     
     var body: some View {
         Form {
             Section {
-                Toggle("Start at Login", isOn: $startAtLogin)
-                Toggle("Show Icon on Menu Bar", isOn: $showMenuBarExtra)
+                Toggle(isOn: $startAtLogin) {
+                    Text("Start at Login")
+                    Text("Start at Login: Automatically launch the app when you log in to your Mac.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .onChange(of: startAtLogin) { _, newValue in
+                    do {
+                        try loginItemService.setEnabled(newValue)
+                    } catch {
+                        // Revert the toggle if the operation failed
+                        startAtLogin = loginItemService.isEnabled
+                        print("Failed to update login item: \(error)")
+                    }
+                }
+                Toggle(isOn: $showMenuBarExtra) {
+                    Text("Show Icon on Menu Bar")
+                    Text("Show Icon on Menu Bar: Display the app's icon in the menu bar for quick access.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             } header: {
                 Text("General")
-            } footer: {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Start at Login: Automatically launch the app when you log in to your Mac.")
-                    Text("Show Icon on Menu Bar: Display the app's icon in the menu bar for quick access.")
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
             }
             
             Section {
@@ -45,5 +59,9 @@ struct GeneralSettingsView : View {
         }
         .formStyle(.grouped)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .onAppear {
+            // Sync the toggle state with the actual login item status
+            startAtLogin = loginItemService.isEnabled
+        }
     }
 }
