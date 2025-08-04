@@ -11,10 +11,15 @@ import Combine
 import SwiftUI
 import SwiftData
 
+extension Notification.Name {
+    static let menuBarExtraToggled = Notification.Name("menuBarExtraToggled")
+}
+
 class AppDelegate : NSObject, NSApplicationDelegate {
-    private var statusItem: NSStatusItem!
+    private var statusItem: NSStatusItem?
     private var overlayController: OverlayWindowController?
     private var settingsWindowController: NSWindowController?
+    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         overlayController = OverlayWindowController {
@@ -26,42 +31,119 @@ class AppDelegate : NSObject, NSApplicationDelegate {
             self.overlayController?.toggle()
         }
         
-        setupMenuBar()
+        setupAppMode()
+        
+        // Listen for changes to the showMenuBarExtra setting
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(menuBarSettingChanged),
+            name: .menuBarExtraToggled,
+            object: nil
+        )
     }
     
-    private func setupMenuBar() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private func setupAppMode() {
+        if showMenuBarExtra {
+            setupMenuBarMode()
+        } else {
+            setupDockMode()
+        }
+    }
+    
+    private func setupMenuBarMode() {
+        // Set app as background-only (utility app)
+        NSApp.setActivationPolicy(.accessory)
         
-        if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "wand.and.rays", accessibilityDescription: "SmartCorrect")
-            button.imagePosition = .imageOnly
+        // Create menu bar item if it doesn't exist
+        if statusItem == nil {
+            statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+            
+            if let button = statusItem?.button {
+                button.image = NSImage(systemSymbolName: "wand.and.rays", accessibilityDescription: "SmartCorrect")
+                button.imagePosition = .imageOnly
+            }
+            
+            let menu = NSMenu()
+            
+            let openItem = NSMenuItem(title: "Open SmartCorrect", action: #selector(openSmartCorrect), keyEquivalent: "")
+            openItem.target = self
+            menu.addItem(openItem)
+            
+            menu.addItem(NSMenuItem.separator())
+            
+            let aboutItem = NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: "")
+            aboutItem.target = self
+            menu.addItem(aboutItem)
+            
+            menu.addItem(NSMenuItem.separator())
+            
+            let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: "")
+            settingsItem.target = self
+            menu.addItem(settingsItem)
+            
+            menu.addItem(NSMenuItem.separator())
+            
+            let quitItem = NSMenuItem(title: "Quit SmartCorrect", action: #selector(quitApp), keyEquivalent: "q")
+            quitItem.target = self
+            menu.addItem(quitItem)
+            
+            statusItem?.menu = menu
+        }
+    }
+    
+    private func setupDockMode() {
+        // Set app as regular app (appears in dock)
+        NSApp.setActivationPolicy(.regular)
+        
+        // Remove menu bar item
+        if let statusItem = statusItem {
+            NSStatusBar.system.removeStatusItem(statusItem)
+            self.statusItem = nil
         }
         
-        let menu = NSMenu()
+        // Setup application menu for dock mode
+        setupApplicationMenu()
+    }
+    
+    private func setupApplicationMenu() {
+        let mainMenu = NSMenu()
         
-        let openItem = NSMenuItem(title: "Open SmartCorrect", action: #selector(openSmartCorrect), keyEquivalent: "")
-        openItem.target = self
-        menu.addItem(openItem)
+        // App menu
+        let appMenuItem = NSMenuItem()
+        let appMenu = NSMenu()
         
-        menu.addItem(NSMenuItem.separator())
-        
-        let aboutItem = NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: "")
+        let aboutItem = NSMenuItem(title: "About SmartCorrect", action: #selector(showAbout), keyEquivalent: "")
         aboutItem.target = self
-        menu.addItem(aboutItem)
+        appMenu.addItem(aboutItem)
         
-        menu.addItem(NSMenuItem.separator())
+        appMenu.addItem(NSMenuItem.separator())
         
-        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: "")
+        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: ",")
         settingsItem.target = self
-        menu.addItem(settingsItem)
+        appMenu.addItem(settingsItem)
         
-        menu.addItem(NSMenuItem.separator())
+        appMenu.addItem(NSMenuItem.separator())
         
         let quitItem = NSMenuItem(title: "Quit SmartCorrect", action: #selector(quitApp), keyEquivalent: "q")
         quitItem.target = self
-        menu.addItem(quitItem)
+        appMenu.addItem(quitItem)
         
-        statusItem.menu = menu
+        appMenuItem.submenu = appMenu
+        mainMenu.addItem(appMenuItem)
+        
+        // Window menu
+        let windowMenuItem = NSMenuItem(title: "Window", action: nil, keyEquivalent: "")
+        let windowMenu = NSMenu(title: "Window")
+        windowMenuItem.submenu = windowMenu
+        mainMenu.addItem(windowMenuItem)
+        
+        NSApp.windowsMenu = windowMenu
+        NSApp.mainMenu = mainMenu
+    }
+    
+    @objc private func menuBarSettingChanged() {
+        // Check if showMenuBarExtra changed
+        setupAppMode()
     }
     
     @objc private func openSmartCorrect() {

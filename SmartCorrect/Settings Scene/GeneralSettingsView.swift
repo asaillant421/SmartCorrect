@@ -39,6 +39,14 @@ struct GeneralSettingsView : View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .onChange(of: showMenuBarExtra) { _, newValue in
+                    // Notify AppDelegate about the change
+                    NotificationCenter.default.post(
+                        name: .menuBarExtraToggled,
+                        object: nil,
+                        userInfo: ["showMenuBarExtra": newValue]
+                    )
+                }
             } header: {
                 Text("General")
             }
