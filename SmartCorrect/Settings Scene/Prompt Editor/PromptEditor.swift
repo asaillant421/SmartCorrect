@@ -17,30 +17,57 @@ struct PromptEditor: View {
     @Bindable var prompt: Prompt
     
     var body: some View {
-        Form {
-            HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    TextField("Name of Shortcut", text: $prompt.name)
+        HStack(alignment: .top, spacing: 16) {
+            // Left side: Name and Shortcut
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Name")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    TextField("Shortcut name", text: $prompt.name)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(maxWidth: 200)
                         .onSubmit {
                             saveChanges()
                         }
-                    //TODO: KeyboardShortcuts.Recorder("Record Shortcut", name: KeyboardShortcuts.Name(name))
-                    KeyboardShortcuts.Recorder(for: KeyboardShortcuts.Name(prompt.name))
+                        .accessibilityLabel("Shortcut name")
                 }
                 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Prompt for Shortcut")
-                    TextEditor(text: $prompt.text)
-                        .focused($isTextEditorFocused)
-                        .onChange(of: isTextEditorFocused) { oldValue, newValue in
-                            // Save when TextEditor loses focus
-                            if oldValue && !newValue {
-                                saveChanges()
-                            }
-                        }
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Shortcut")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    KeyboardShortcuts.Recorder(for: KeyboardShortcuts.Name(prompt.name))
+                        .frame(maxWidth: 200)
+                        .accessibilityLabel("Record keyboard shortcut")
                 }
             }
+            .frame(maxWidth: 220)
+            
+            // Right side: Prompt text
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Prompt Text")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                
+                TextEditor(text: $prompt.text)
+                    .focused($isTextEditorFocused)
+                    .frame(minHeight: 80)
+                    .scrollContentBackground(.hidden)
+                    .background(Color(NSColor.textBackgroundColor))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                    )
+                    .onChange(of: isTextEditorFocused) { oldValue, newValue in
+                        if oldValue && !newValue {
+                            saveChanges()
+                        }
+                    }
+                    .accessibilityLabel("Prompt text editor")
+            }
         }
+        .padding()
         .onChange(of: prompt.name) { oldValue, newValue in
             // Also save when name changes (with debouncing)
             if oldValue != newValue {
