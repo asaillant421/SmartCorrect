@@ -16,7 +16,13 @@ class CorrectionViewModel {
     private let apiKey: String
     private var mainPrompt: Prompt?
     
-    var textForCorrection = ""
+    var textForCorrection = "" {
+        didSet {
+            guard textForCorrection != oldValue else { return }
+            
+            correctedText = ""
+        }
+    }
     var correctedText = ""
     var additionalInstructions = ""
     
@@ -34,7 +40,8 @@ class CorrectionViewModel {
         
         print("New text is \(text)")
         textForCorrection = text
-        correctedText = ""
+//        correctedText = ""
+        print("New corrected text is \(correctedText)")
     }
     
     func correctText() async throws {
