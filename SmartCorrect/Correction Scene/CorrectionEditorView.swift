@@ -18,6 +18,13 @@ struct CorrectionEditorView : View {
             TextEditor(text: .constant(viewModel.textForCorrection))
             Text("Suggested correction")
             TextEditor(text: .constant(viewModel.correctedText))
+            HStack {
+                Spacer()
+                Button(action: copyCorrectedText) {
+                    Image(systemName: "doc.on.doc")
+                }
+                .disabled(viewModel.correctedText.isEmpty)
+            }
             Text("Additional instructions")
             TextEditor(text: $viewModel.additionalInstructions)
         }
@@ -26,6 +33,13 @@ struct CorrectionEditorView : View {
     init(viewModel: CorrectionViewModel) {
         self.viewModel = viewModel
     }
+    
+    private func copyCorrectedText() {
+        let pboard = NSPasteboard.general
+        pboard.clearContents()
+        pboard.setString(viewModel.correctedText, forType: .string)
+    }
+    
 }
 
 #Preview {
