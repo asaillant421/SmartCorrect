@@ -15,5 +15,5 @@ extension Notification {
 extension Notification.Name {
     static let serviceActivated = Self("SmartCorrectServiceActivatedNotification")
     static let orderedFront = Self("SmartCorrectOrderedFrontNotification")
-    
+    static let menuBarExtraToggled = Self("menuBarExtraToggled")
 }
