@@ -36,7 +36,7 @@ struct CorrectionLogsView : View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(alignment: .bottom) {
                 VStack(alignment: .leading) {
                     Text("Start Date")
                         .font(.caption)
