@@ -10,23 +10,11 @@ import Foundation
 import SwiftData
 import KeyboardShortcuts
 
-@Model
-final class Prompt {
-    var text: String
-    var shortcut: String
-    var name: String
-    var shouldShowButton: Bool
-    var creationDate: Date
-    
-    static let shouldShow: Predicate<Prompt> = #Predicate { prompt in
+// Type alias to maintain compatibility with existing code
+typealias Prompt = SchemaV1.PromptV1
+
+extension SchemaV1.PromptV1 {
+    static let shouldShow: Predicate<SchemaV1.PromptV1> = #Predicate { prompt in
         prompt.shouldShowButton
-    }
-    
-    init(text: String = "", shortcut: String = "", name: String = "", shouldShowButton: Bool = true, creationDate: Date = Date()) {
-        self.text = text
-        self.shortcut = shortcut
-        self.name = name
-        self.shouldShowButton = shouldShowButton
-        self.creationDate = creationDate
     }
 }

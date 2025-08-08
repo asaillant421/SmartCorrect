@@ -12,17 +12,18 @@ import Foundation
 @MainActor
 let promptContainer: ModelContainer = {
     do {
-        let schema = Schema([
-            Prompt.self,
-            AILogEntry.self,
-        ])
+        let schema = Schema(versionedSchema: SchemaV1.self)
 #if DEBUG
         let memoryOnly = true
 #else
         let memoryOnly = false
 #endif
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: memoryOnly)
-        let modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+        let modelContainer = try ModelContainer(
+            for: schema, 
+            migrationPlan: MigrationPlan.self,
+            configurations: [modelConfiguration]
+        )
         
         var promptFetchDescriptor = FetchDescriptor<Prompt>()
         promptFetchDescriptor.fetchLimit = 1

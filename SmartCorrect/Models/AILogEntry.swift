@@ -9,15 +9,5 @@
 import Foundation
 import SwiftData
 
-@Model
-final class AILogEntry {
-    var timestamp: Date
-    var requestText: String
-    var responseText: String
-    
-    init(timestamp: Date = Date(), requestText: String, responseText: String) {
-        self.timestamp = timestamp
-        self.requestText = requestText
-        self.responseText = responseText
-    }
-}
+// Type alias to maintain compatibility with existing code
+typealias AILogEntry = SchemaV1.AILogEntryV1

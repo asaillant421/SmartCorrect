@@ -10,26 +10,83 @@ import SwiftUI
 import SwiftData
 
 struct CorrectionLogsView : View {
-    @Query(sort: \AILogEntry.timestamp, order: .reverse) var logEntries: [AILogEntry]
+    @Query(sort: \AILogEntry.timestamp, order: .reverse) var allLogEntries: [AILogEntry]
     @State private var selectedEntry: AILogEntry?
+    @State private var startDate: Date = Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date()
+    @State private var endDate: Date = Date()
+    @State private var originatingApp: String = ""
+    
+    private var filteredLogEntries: [AILogEntry] {
+        let calendar = Calendar.current
+        let startOfStartDate = calendar.startOfDay(for: startDate)
+        let endOfEndDate = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: endDate)) ?? endDate
+        
+        if originatingApp.isEmpty {
+            return allLogEntries.filter { entry in
+                entry.timestamp >= startOfStartDate && entry.timestamp < endOfEndDate
+            }
+        } else {
+            return allLogEntries.filter { entry in
+                entry.source.contains(originatingApp) && entry.timestamp >= startOfStartDate && entry.timestamp < endOfEndDate
+            }
+        }
+            
+    }
     
     var body: some View {
-        NavigationSplitView {
-            List(logEntries, id: \.timestamp, selection: $selectedEntry) { entry in
-                LogEntryRow(entry: entry)
-                    .tag(entry)
+        VStack(spacing: 0) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Start Date")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    DatePicker("", selection: $startDate, displayedComponents: .date)
+                        .datePickerStyle(.compact)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("End Date")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    DatePicker("", selection: $endDate, displayedComponents: .date)
+                        .datePickerStyle(.compact)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Source")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    TextField("Source", text: $originatingApp)
+                }
+
+                Spacer()
             }
-            .navigationTitle("Correction Logs")
-        } detail: {
-            if let selectedEntry = selectedEntry {
-                LogEntryDetail(entry: selectedEntry)
-            } else {
-                ContentUnavailableView(
-                    "No Selection",
-                    systemImage: "clock.arrow.circlepath",
-                    description: Text("Select a log entry to view details")
-                )
+            .padding()
+            .background(Color(NSColor.controlBackgroundColor))
+            
+            NavigationSplitView {
+                List(filteredLogEntries, id: \.timestamp, selection: $selectedEntry) { entry in
+                    LogEntryRow(entry: entry)
+                        .tag(entry)
+                }
+                .navigationTitle("Correction Logs")
+            } detail: {
+                if let selectedEntry = selectedEntry {
+                    LogEntryDetail(entry: selectedEntry)
+                } else {
+                    ContentUnavailableView(
+                        "No Selection",
+                        systemImage: "clock.arrow.circlepath",
+                        description: Text("Select a log entry to view details")
+                    )
+                }
             }
+        }
+        .onChange(of: startDate) { _, _ in
+            selectedEntry = nil
+        }
+        .onChange(of: endDate) { _, _ in
+            selectedEntry = nil
         }
     }
 }
