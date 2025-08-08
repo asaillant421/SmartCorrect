@@ -14,6 +14,7 @@ let promptContainer: ModelContainer = {
     do {
         let schema = Schema([
             Prompt.self,
+            AILogEntry.self,
         ])
 #if DEBUG
         let memoryOnly = true
