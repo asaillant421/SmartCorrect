@@ -31,7 +31,7 @@ class CorrectionViewModel {
     
     init(apiKey: String, modelContext: ModelContext) {
         self.apiKey = apiKey
-        service = CorrectionService(apiKey: apiKey)
+        service = CorrectionService(apiKey: apiKey, modelContext: modelContext)
         fetchMainPrompt(from: modelContext)
     }
     
@@ -46,15 +46,17 @@ class CorrectionViewModel {
     
     func correctText() async throws {
         let promptText = mainPrompt?.text ?? Constants.defaultMainPrompt
+        let originatingApp = await textService.selectedTextSource ?? ""
         if additionalInstructions.isEmpty {
-            correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: promptText)
+            correctedText = try await service.fetchCorrection(for: textForCorrection, in: originatingApp, prompt: promptText)
         } else {
             try await improveCorrection(withModifications: additionalInstructions)
         }
     }
     
     func correctText(prompt: String) async throws {
-        correctedText = try await service.fetchCorrection(for: textForCorrection, prompt: prompt)
+        let originatingApp = await textService.selectedTextSource ?? ""
+        correctedText = try await service.fetchCorrection(for: textForCorrection, in: originatingApp, prompt: prompt)
     }
     
     func pasteCorrection() async {
@@ -63,11 +65,8 @@ class CorrectionViewModel {
     }
     
     func improveCorrection(withModifications extraInstructions: String? = nil) async throws {
-//        let additional = extraInstructions ?? additionalInstructions
-//        
-//        let modifiedPrompt = Constants.defaultSecondaryPrompt.replacingOccurrences(of: Constants.defaultSecondaryPromptInstructionPlaceholder, with: additional)
-        
-        correctedText = try await service.fetchCorrection(for: correctedText, prompt: extraInstructions ?? additionalInstructions)
+        let originatingApp = await textService.selectedTextSource ?? ""
+        correctedText = try await service.fetchCorrection(for: correctedText, in: originatingApp, prompt: extraInstructions ?? additionalInstructions)
     }
      
     private func fetchMainPrompt(from context: ModelContext) {

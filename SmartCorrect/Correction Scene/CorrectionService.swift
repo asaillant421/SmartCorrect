@@ -7,23 +7,47 @@
 //
 
 import SwiftUI
+import SwiftData
+import Foundation
 
 actor CorrectionService {
     private let apiKey: String
     private let model: GPTModel
+    private let modelContext: ModelContext
     
-    init(apiKey: String, model: GPTModel = .gpt35turbo) {
+    init(apiKey: String, modelContext: ModelContext, model: GPTModel = .gpt35turbo) {
         self.apiKey = apiKey
+        self.modelContext = modelContext
         self.model = model
     }
     
-    func fetchCorrection(for text: String, prompt: String = Constants.defaultMainPrompt) async throws -> String {
+    func fetchCorrection(for text: String, in origin: String, prompt: String = Constants.defaultMainPrompt) async throws -> String {
         
         let paramsForChatGPT = [prompt, text].joined(separator: "\n\n")
         
         let request = ResponsesAPIRequest(model: model, input: paramsForChatGPT)
         
+        // Encode request to JSON for logging
+        let requestData = try JSONEncoder().encode(request)
+        let requestJSON = String(data: requestData, encoding: .utf8) ?? ""
+        
         let response: ResponsesAPIResponse = try await APIManager.shared.sendRequest(endpoint: .responses, params: request, authToken: "Bearer \(apiKey)")
+        
+        // Encode response to JSON for logging
+        let responseData = try JSONEncoder().encode(response)
+        let responseJSON = String(data: responseData, encoding: .utf8) ?? ""
+        
+        // Create AILogEntry
+        let logEntry = AILogEntry(
+            requestText: requestJSON,
+            responseText: responseJSON,
+            source: origin
+        )
+        
+        await MainActor.run {
+            modelContext.insert(logEntry)
+            try? modelContext.save()
+        }
         
         guard let output = response.output.first,
               let content = output.content.first,

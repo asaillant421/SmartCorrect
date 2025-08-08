@@ -13,6 +13,13 @@ actor TextSelectionService {
     private var previousBundleID: String?
     private var previousAXUIElement: AXUIElement?
     
+    var selectedTextSource: String? {
+        guard let bundleID = previousBundleID, !bundleID.isEmpty else { return nil
+        }
+        
+        return NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).first?.localizedName
+    }
+    
     func findSelectedText() async -> String? {
         if let text = await selectedTextViaAccessibility() {
             print("Found \(text) via Accessibility")
