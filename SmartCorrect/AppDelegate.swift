@@ -76,6 +76,10 @@ class AppDelegate : NSObject, NSApplicationDelegate {
             
             menu.addItem(NSMenuItem.separator())
             
+            let logsItem = NSMenuItem(title: "Logs...", action: #selector(openLogs), keyEquivalent: "")
+            logsItem.target = self
+            menu.addItem(logsItem)
+            
             let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openSettings), keyEquivalent: "")
             settingsItem.target = self
             menu.addItem(settingsItem)
@@ -160,8 +164,13 @@ class AppDelegate : NSObject, NSApplicationDelegate {
         
         let openSmartCorrectItem = NSMenuItem(title: "Open SmartCorrect", action: #selector(openSmartCorrect), keyEquivalent: "")
         openSmartCorrectItem.target = self
-        
         windowMenu.addItem(openSmartCorrectItem)
+        
+        let logsItem = NSMenuItem(title: "Logs...", action: #selector(openLogs), keyEquivalent: "l")
+        logsItem.target = self
+        windowMenu.addItem(logsItem)
+        
+        windowMenu.addItem(NSMenuItem.separator())
         
         let minimizeItem = NSMenuItem(title: "Minimize", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
         windowMenu.addItem(minimizeItem)
@@ -233,6 +242,11 @@ class AppDelegate : NSObject, NSApplicationDelegate {
         
         settingsWindowController?.showWindow(nil)
         settingsWindowController?.window?.makeKeyAndOrderFront(nil)
+        NSApplication.shared.activate(ignoringOtherApps: true)
+    }
+    
+    @MainActor @objc private func openLogs() {
+        LogsWindowController.showLogs()
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
     

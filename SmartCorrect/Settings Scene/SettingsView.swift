@@ -17,9 +17,6 @@ struct SettingsView : View {
                 Tab("Shortcuts & Prompts", systemImage: "command") {
                     ShortcutsAndPromptsSettingsView()
                 }
-                Tab("Correction Logs", systemImage: "clock.arrow.circlepath") {
-                    CorrectionLogsView()
-                }
                 Tab("GPT Training", systemImage: "sparkles") {
                     TrainingView()
                 }
