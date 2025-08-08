@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct CorrectionLogsView : View {
     @Query(sort: \AILogEntry.timestamp, order: .reverse) var allLogEntries: [AILogEntry]
@@ -60,6 +61,12 @@ struct CorrectionLogsView : View {
                 }
 
                 Spacer()
+                
+                Button {
+                    exportLogEntries()
+                } label: {
+                    Text("Export")
+                }
             }
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
@@ -90,6 +97,73 @@ struct CorrectionLogsView : View {
         }
         .onChange(of: originatingApp) { _, _ in
             selectedEntry = nil
+        }
+    }
+    
+    
+    private func exportLogEntries() {
+        let logContent = createLogFileContent()
+        showSavePanel(content: logContent)
+    }
+    
+    private func createLogFileContent() -> String {
+        var content = ""
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .full
+        dateFormatter.timeStyle = .full
+        
+        for (index, entry) in filteredLogEntries.enumerated() {
+            if index > 0 {
+                content += "\n" + String(repeating: "=", count: 80) + "\n\n"
+            }
+            
+            // Header with source and timestamp
+            let source = entry.source.isEmpty ? "<unknown>" : entry.source
+            content += "Source: \(source)\n"
+            content += "Timestamp: \(dateFormatter.string(from: entry.timestamp))\n\n"
+            
+            // Request JSON (pretty-printed)
+            content += "REQUEST:\n"
+            content += prettyPrintJSON(entry.requestText)
+            content += "\n\n"
+            
+            // Response JSON (pretty-printed)
+            content += "RESPONSE:\n"
+            content += prettyPrintJSON(entry.responseText)
+            content += "\n"
+        }
+        
+        return content
+    }
+    
+    private func prettyPrintJSON(_ jsonString: String) -> String {
+        guard let jsonData = jsonString.data(using: .utf8),
+              let jsonObject = try? JSONSerialization.jsonObject(with: jsonData),
+              let prettyData = try? JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted, .sortedKeys]),
+              let prettyString = String(data: prettyData, encoding: .utf8) else {
+            // If JSON parsing fails, return the original string
+            return jsonString
+        }
+        return prettyString
+    }
+    
+    private func showSavePanel(content: String) {
+        let savePanel = NSSavePanel()
+        savePanel.title = "Export Correction Logs"
+        savePanel.message = "Choose where to save the log file"
+        savePanel.nameFieldStringValue = "correction_logs_\(Date().formatted(date: .numeric, time: .omitted).replacingOccurrences(of: "/", with: "-")).txt"
+        savePanel.allowedContentTypes = [.plainText]
+        savePanel.canCreateDirectories = true
+        
+        savePanel.begin { response in
+            if response == .OK, let url = savePanel.url {
+                do {
+                    try content.write(to: url, atomically: true, encoding: .utf8)
+                } catch {
+                    // Handle error - could show an alert here
+                    print("Failed to save log file: \(error.localizedDescription)")
+                }
+            }
         }
     }
 }
