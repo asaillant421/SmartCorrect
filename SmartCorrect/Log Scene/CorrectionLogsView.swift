@@ -36,30 +36,13 @@ struct CorrectionLogsView : View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack(alignment: .bottom) {
-                VStack(alignment: .leading) {
-                    Text("Start Date")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    DatePicker("", selection: $startDate, displayedComponents: .date)
-                        .datePickerStyle(.compact)
-                }
+            HStack(alignment: .center) {
+                LogFiltersView(
+                    startDate: $startDate,
+                    endDate: $endDate,
+                    originatingApp: $originatingApp,
+                )
                 
-                VStack(alignment: .leading) {
-                    Text("End Date")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    DatePicker("", selection: $endDate, displayedComponents: .date)
-                        .datePickerStyle(.compact)
-                }
-                
-                VStack(alignment: .leading) {
-                    Text("Source")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    TextField("Source", text: $originatingApp)
-                }
-
                 Spacer()
                 
                 Button {
