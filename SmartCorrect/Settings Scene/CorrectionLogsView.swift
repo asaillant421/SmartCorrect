@@ -88,6 +88,9 @@ struct CorrectionLogsView : View {
         .onChange(of: endDate) { _, _ in
             selectedEntry = nil
         }
+        .onChange(of: originatingApp) { _, _ in
+            selectedEntry = nil
+        }
     }
 }
 
@@ -96,7 +99,7 @@ struct LogEntryRow: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(entry.timestamp, style: .offset)
+            Text(entry.source.isEmpty ? "<unknown>" : entry.source)
                 .font(.headline)
                 .foregroundColor(.primary)
             HStack(alignment: .center, spacing: 2) {
@@ -118,6 +121,12 @@ struct LogEntryDetail: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .center, spacing: 8) {
+                    Label("Source", systemImage: "doc.text")
+                        .font(.headline)
+                    Text(entry.source.isEmpty ? "<unknown>" : entry.source)
+                }
+                
                 VStack(alignment: .leading, spacing: 8) {
                     Label("Request", systemImage: "arrow.up.circle")
                         .font(.headline)
