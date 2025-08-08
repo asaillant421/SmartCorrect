@@ -22,6 +22,7 @@ actor CorrectionService {
     }
     
     func fetchCorrection(for text: String, in origin: String, prompt: String = Constants.defaultMainPrompt) async throws -> String {
+        guard !origin.isEmpty else { return text }
         
         let paramsForChatGPT = [prompt, text].joined(separator: "\n\n")
         
