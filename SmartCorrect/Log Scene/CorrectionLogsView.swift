@@ -45,11 +45,10 @@ struct CorrectionLogsView : View {
                 
                 Spacer()
                 
-                Button {
-                    exportLogEntries()
-                } label: {
+                Button(action: exportLogEntries) {
                     Text("Export")
                 }
+                .disabled(filteredLogEntries.isEmpty)
             }
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
