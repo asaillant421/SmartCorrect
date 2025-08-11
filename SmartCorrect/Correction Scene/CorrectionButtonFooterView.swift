@@ -19,19 +19,27 @@ struct CorrectionButtonFooterView : View {
             }
             Spacer()
             
-            Button("Paste Correction") {
-                Task.detached {
-                    await viewModel.pasteCorrection()
-                }
+            Button(action: pasteCorrection) {
+                Text("Paste Correction")
             }
             .disabled(viewModel.correctedText.isEmpty)
             
-            Button("Ask ChatGPT") {
-                Task {
-                    try await viewModel.correctText()
-                }
+            Button(action: askChatGPT) {
+                Text("Ask ChatGPT")
             }
             .disabled(viewModel.textForCorrection.isEmpty)
+        }
+    }
+    
+    private func pasteCorrection() {
+        Task.detached {
+            await viewModel.pasteCorrection()
+        }
+    }
+    
+    private func askChatGPT() {
+        Task.detached {
+            try! await viewModel.correctText()
         }
     }
 }
