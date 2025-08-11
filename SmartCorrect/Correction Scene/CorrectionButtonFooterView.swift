@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct CorrectionButtonFooterView : View {
     @Bindable var viewModel: CorrectionViewModel
@@ -20,7 +21,20 @@ struct CorrectionButtonFooterView : View {
             Spacer()
             
             Button(action: pasteCorrection) {
-                Text("Paste Correction")
+                HStack(spacing: 4) {
+                    if let icon = viewModel.sourceAppIcon {
+                        Image(nsImage: icon)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 16, height: 16)
+                    }
+                    
+                    if viewModel.sourceAppName.isEmpty {
+                        Text("Paste Correction")
+                    } else {
+                        Text("Paste to \(viewModel.sourceAppName)")
+                    }
+                }
             }
             .disabled(viewModel.correctedText.isEmpty)
             

@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 import SwiftData
+import AppKit
 
 @Observable
 class CorrectionViewModel {
@@ -25,6 +26,8 @@ class CorrectionViewModel {
     }
     var correctedText = ""
     var additionalInstructions = ""
+    var sourceAppName: String = ""
+    var sourceAppIcon: NSImage?
     
     private let service: CorrectionService
     private let textService = TextSelectionService()
@@ -36,12 +39,41 @@ class CorrectionViewModel {
     }
     
     func findSelectedText() async {
-        guard let text = await textService.findSelectedText(), text != textForCorrection else { return }
+        guard let text = await textService.findSelectedText(), text != textForCorrection else { 
+            // Update source app info even if text hasn't changed
+            await updateSourceAppInfo()
+            return 
+        }
         
         print("New text is \(text)")
         textForCorrection = text
+        await updateSourceAppInfo()
 //        correctedText = ""
         print("New corrected text is \(correctedText)")
+    }
+    
+    private func updateSourceAppInfo() async {
+        sourceAppName = await textService.selectedTextSource ?? ""
+        
+        // Get the bundle ID to find the app icon
+        if let bundleID = await getBundleID() {
+            sourceAppIcon = getAppIcon(for: bundleID)
+        } else {
+            sourceAppIcon = nil
+        }
+    }
+    
+    private func getBundleID() async -> String? {
+        // Access the bundle ID from TextSelectionService
+        // We need to get this from the service since it has the previousBundleID
+        return await textService.getBundleID()
+    }
+    
+    private func getAppIcon(for bundleID: String) -> NSImage? {
+        guard let app = NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).first else {
+            return nil
+        }
+        return app.icon
     }
     
     func correctText() async throws {
