@@ -12,7 +12,6 @@ import SwiftData
 struct ShortcutsAndPromptsSettingsView : View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Prompt.creationDate) var prompts: [Prompt]
-    @State private var selection: PersistentIdentifier?
     
     var body: some View {
         VStack {
@@ -21,22 +20,14 @@ struct ShortcutsAndPromptsSettingsView : View {
             }
         
             HStack {
+                Spacer()
                 Button("Add Prompt", systemImage: "plus") {
                     let newPrompt = Prompt()
                     modelContext.insert(newPrompt)
-                    selection = newPrompt.id
                 }
             }
 
         }
         .padding(8)
-        
-        
-        
-//        ScrollView {
-//            VStack(alignment: .leading) {
-//                
-//            }
-//        }
     }
 }
