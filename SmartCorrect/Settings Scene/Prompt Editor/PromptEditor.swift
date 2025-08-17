@@ -13,6 +13,7 @@ import KeyboardShortcuts
 struct PromptEditor: View {
     @Environment(\.modelContext) private var modelContext
     @FocusState private var isTextEditorFocused: Bool
+    @StateObject private var shortcutManager = PromptShortcutManager.shared
     
     @Bindable var prompt: Prompt
     
@@ -37,9 +38,21 @@ struct PromptEditor: View {
                     Text("Shortcut")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    KeyboardShortcuts.Recorder(for: KeyboardShortcuts.Name(prompt.name))
+                    
+                    if let shortcutName = shortcutManager.getShortcutName(for: prompt) {
+                        KeyboardShortcuts.Recorder(for: shortcutName) { _ in
+                            // When shortcut is changed, register it
+                            shortcutManager.registerShortcut(for: prompt)
+                            saveChanges()
+                        }
                         .frame(maxWidth: 200)
                         .accessibilityLabel("Record keyboard shortcut")
+                    } else {
+                        Text("Enter a name first")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: 200, maxHeight: 22)
+                    }
                 }
             }
             .frame(maxWidth: 220)
@@ -68,9 +81,25 @@ struct PromptEditor: View {
             }
         }
         .padding()
+        .onAppear {
+            // Register shortcut when view appears if name exists
+            if !prompt.name.isEmpty {
+                shortcutManager.registerShortcut(for: prompt)
+            }
+        }
         .onChange(of: prompt.name) { oldValue, newValue in
             // Also save when name changes (with debouncing)
             if oldValue != newValue {
+                // Unregister old shortcut if name changed
+                if !oldValue.isEmpty {
+                    shortcutManager.unregisterShortcut(for: oldValue)
+                }
+                
+                // Register new shortcut if name is not empty
+                if !newValue.isEmpty {
+                    shortcutManager.registerShortcut(for: prompt)
+                }
+                
                 saveChanges()
             }
         }

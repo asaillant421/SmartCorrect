@@ -43,7 +43,7 @@ class OverlayWindowController: NSWindowController {
         }
     }
     
-    private func show() {
+    func show() {
         guard let window = self.window else { return }
         
         if window.frame.origin == CGPoint.zero, let screen = NSScreen.main {

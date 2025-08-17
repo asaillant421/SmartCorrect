@@ -23,9 +23,14 @@ class AppDelegate : NSObject, NSApplicationDelegate {
                 .modelContainer(promptContainer)
         }
         
-        GlobalHotKeyManager.registerHotKey {
-            self.overlayController?.toggle()
-        }
+        // Set up shortcut manager with overlay controller
+        PromptShortcutManager.shared.setOverlayController(overlayController!)
+        
+        // Load existing prompts and register their shortcuts
+        PromptShortcutManager.shared.loadExistingPrompts(from: promptContainer.mainContext)
+
+        // Set up the main shortcut (Cmd+Opt+;) if necessary using the main prompt
+        PromptShortcutManager.shared.setupMainShortcut(with: promptContainer.mainContext)
         
         setupAppMode()
         

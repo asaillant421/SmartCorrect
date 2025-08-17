@@ -47,7 +47,6 @@ struct CorrectionView : View {
     }
     
     private func updateAndCorrect() {
-        
         Task.detached(priority: .background) {
             await viewModel.findSelectedText()
             

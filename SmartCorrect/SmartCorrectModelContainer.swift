@@ -32,7 +32,7 @@ let promptContainer: ModelContainer = {
         
         // Fill in the default data
         
-        let mainPrompt = Prompt(text: Constants.defaultMainPrompt, name: String(localized: "Main Prompt"), shouldShowButton: false, creationDate: Date.distantPast)
+        let mainPrompt = Prompt(text: Constants.defaultMainPrompt, shortcut: "Cmd+Opt+;", name: String(localized: "Main Prompt"), shouldShowButton: false, creationDate: Date.distantPast)
                 
         modelContainer.mainContext.insert(mainPrompt)
         

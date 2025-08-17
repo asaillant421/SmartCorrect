@@ -34,7 +34,11 @@ struct ContentView: View {
             }
             .onAppear {
                 if nil == viewModel, let apiKey, !apiKey.isEmpty {
-                    viewModel = CorrectionViewModel(apiKey: apiKey, modelContext: modelContext)
+                    let newViewModel = CorrectionViewModel(apiKey: apiKey, modelContext: modelContext)
+                    viewModel = newViewModel
+                    
+                    // Set up the shortcut manager with the view model
+                    PromptShortcutManager.shared.setCorrectionViewModel(newViewModel)
                 }
             }
         //}
