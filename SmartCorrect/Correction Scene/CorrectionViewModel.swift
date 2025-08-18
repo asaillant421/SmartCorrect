@@ -28,6 +28,7 @@ class CorrectionViewModel {
     var additionalInstructions = ""
     var sourceAppName: String = ""
     var sourceAppIcon: NSImage?
+    var currentPromptName: String = "Improve Writing"
     
     private let service: CorrectionService
     private let textService = TextSelectionService()
@@ -79,6 +80,7 @@ class CorrectionViewModel {
     func correctText() async throws {
         let promptText = mainPrompt?.text ?? Constants.defaultMainPrompt
         let originatingApp = await textService.selectedTextSource ?? ""
+        currentPromptName = "Improve Writing"  // Reset to default when using main prompt
         if additionalInstructions.isEmpty {
             correctedText = try await service.fetchCorrection(for: textForCorrection, in: originatingApp, prompt: promptText)
         } else {
@@ -88,6 +90,13 @@ class CorrectionViewModel {
     
     func correctText(prompt: String) async throws {
         let originatingApp = await textService.selectedTextSource ?? ""
+        // Keep current prompt name when using this method (for backwards compatibility)
+        correctedText = try await service.fetchCorrection(for: textForCorrection, in: originatingApp, prompt: prompt)
+    }
+    
+    func correctText(prompt: String, promptName: String) async throws {
+        let originatingApp = await textService.selectedTextSource ?? ""
+        currentPromptName = promptName
         correctedText = try await service.fetchCorrection(for: textForCorrection, in: originatingApp, prompt: prompt)
     }
     

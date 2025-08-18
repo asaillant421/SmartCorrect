@@ -17,7 +17,7 @@ struct CorrectionView : View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Improve Writing", systemImage: "sparkles")
+            Label(viewModel.currentPromptName, systemImage: "sparkles")
             
             CorrectionEditorView(viewModel: viewModel)
             

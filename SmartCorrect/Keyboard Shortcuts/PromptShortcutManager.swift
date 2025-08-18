@@ -120,7 +120,7 @@ class PromptShortcutManager: ObservableObject {
         // If there's text selected, correct it using the prompt
         if !viewModel.textForCorrection.isEmpty {
             do {
-                try await viewModel.correctText(prompt: prompt.text)
+                try await viewModel.correctText(prompt: prompt.text, promptName: prompt.name)
             } catch {
                 print("Failed to execute prompt: \(error)")
             }

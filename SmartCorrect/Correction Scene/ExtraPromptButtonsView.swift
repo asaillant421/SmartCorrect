@@ -21,7 +21,7 @@ struct ExtraPromptButtonsView : View {
                     Button(prompt.name) {
                         Task.detached(priority: .background) {
                             do {
-                                try await self.viewModel.correctText(prompt: prompt.text)
+                                try await self.viewModel.correctText(prompt: prompt.text, promptName: prompt.name)
                             } catch {
                                 // TODO
                             }
